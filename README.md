@@ -109,6 +109,8 @@ flowchart TD
 
 <div align="center"><sub>Illustrative — crosswalk edges must be authoritative and cited, not inferred.</sub></div>
 
+This graph is **built today** from the ingested corpus plus a curated, cited crosswalk table ([`data/crosswalks/crosswalks.csv`](data/crosswalks/crosswalks.csv)). Run `regulus graph` for a summary, or `regulus lookup "..." --crosswalks` to see an issue's applicable provisions annotated with the risks they address and their cross-framework references — each with its citation. `CROSSWALK` edges come *only* from the curated table (never inferred); `ADDRESSES` risk tags are keyword-derived and marked low-confidence.
+
 **Node types** — `Framework` · `Provision` (article / control / subcategory) · `RiskCategory` · `Issue` · `Guidance` · `LifecycleStage`
 
 **Edge types** — `CONTAINS` (framework→provision) · `ADDRESSES` / `MITIGATES` (provision→risk) · `CROSSWALK` (provision↔provision across frameworks, **cited**) · `REQUIRES` · `APPLIES_TO` (provision→issue) · `CITES` · `INTERPRETS`
@@ -125,8 +127,8 @@ Early MVP — **Phase 1 (baseline lookup) works end-to-end on real data.**
 | Ingest real **NIST AI RMF 1.0** (PDF, 72 subcategories) | ✅ |
 | Download + cache with provenance | ✅ |
 | Issue → applicable provisions (TF-IDF or embeddings) | ✅ |
-| CLI (`regulus ingest` / `lookup`) | ✅ |
-| Regulatory knowledge graph + cited crosswalks | 🔜 |
+| CLI (`regulus ingest` / `lookup` / `graph`) | ✅ |
+| Regulatory knowledge graph + cited crosswalks | ✅ |
 | Cross-framework evidence paths | 🔜 |
 | LLM interpretation / structured answer | 🔜 |
 | Web UI | 🔜 |
@@ -167,8 +169,8 @@ flowchart LR
     P4 --> P5["Phase 5<br/>UI + evaluation"]
     classDef done fill:#e1f5ee,stroke:#0f6e56,color:#04342c;
     classDef todo fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a;
-    class P1 done
-    class P2,P3,P4,P5 todo
+    class P1,P2 done
+    class P3,P4,P5 todo
 ```
 
 - **Phase 1 — baseline lookup** *(done)*: ingest real frameworks, issue → provisions with citations.

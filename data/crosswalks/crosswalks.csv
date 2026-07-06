@@ -1,0 +1,17 @@
+# Regulus crosswalk table — cross-framework mappings between provisions.
+# Every row is a CURATED, CITED mapping. Crosswalks must be authoritative; the
+# seed rows below are thematic correspondences intended as a starting point and
+# should be reviewed/replaced with official crosswalks (e.g. NIST AI RMF
+# Crosswalks, or an organisation's own control mapping). relation is one of:
+# equivalent | related | supports. provision ids must match the ingested ids
+# (e.g. "MEASURE 2.11", "Article 10"). Rows whose endpoints are not in the loaded
+# corpus are skipped by the graph builder.
+source_framework,source_provision,target_framework,target_provision,relation,rationale,source
+nist_ai_rmf,MEASURE 2.11,eu_ai_act,Article 10,related,"Fairness/harmful-bias evaluation corresponds to the EU AI Act's data governance and bias-examination duties for high-risk systems.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,MEASURE 2.7,eu_ai_act,Article 15,related,"AI system security and resilience measurement corresponds to accuracy, robustness and cybersecurity requirements.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,MEASURE 2.8,eu_ai_act,Article 13,related,"Transparency and accountability measurement corresponds to transparency and provision of information to deployers.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,MEASURE 2.9,eu_ai_act,Article 13,related,"Model explainability corresponds to the instructions-for-use and transparency obligations.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,MEASURE 2.10,eu_ai_act,Article 10,related,"Privacy risk measurement corresponds to data governance obligations for training/validation data.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,GOVERN 1.1,eu_ai_act,Article 9,related,"Understanding legal/regulatory requirements and risk-management processes corresponds to the risk management system requirement.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,MANAGE 4.1,eu_ai_act,Article 72,related,"Post-deployment monitoring plans correspond to the post-market monitoring obligations.",curated seed (thematic) — verify vs authoritative crosswalk
+nist_ai_rmf,GOVERN 1.5,eu_ai_act,Article 72,related,"Ongoing monitoring processes correspond to post-market monitoring.",curated seed (thematic) — verify vs authoritative crosswalk

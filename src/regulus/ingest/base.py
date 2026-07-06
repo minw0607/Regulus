@@ -25,7 +25,7 @@ class Provision:
     section_path: List[str] = field(default_factory=list)  # e.g. ["EU AI Act", "Article 5"]
 
     def unique_id(self) -> str:
-        return f"{self.framework_id}::{self._slug(self.provision_id)}"
+        return provision_uid(self.framework_id, self.provision_id)
 
     def citation(self) -> str:
         return f"{self.framework_name}, {self.provision_id}" + (f" — {self.title}" if self.title else "")
@@ -41,7 +41,16 @@ class Provision:
 
     @staticmethod
     def _slug(value: str) -> str:
-        return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+        return slug(value)
+
+
+def slug(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+
+
+def provision_uid(framework_id: str, provision_id: str) -> str:
+    """Stable graph-node id for a provision — used by both Provision and crosswalks."""
+    return f"{slug(framework_id)}::{slug(provision_id)}"
 
 
 class FrameworkParser(Protocol):

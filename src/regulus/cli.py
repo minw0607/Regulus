@@ -36,19 +36,49 @@ def _cmd_ingest(args, config) -> int:
 
 
 def _cmd_lookup(args, config) -> int:
-    from .lookup import RegulusLookup
-
     ids = [f.strip() for f in args.frameworks.split(",")] if args.frameworks else None
     provisions = StandardsLoader(config).load(framework_ids=ids)
     if not provisions:
         print("No provisions loaded — run `regulus ingest` first or check connectivity.")
         return 1
-    results = RegulusLookup(provisions, config).search(args.issue, top_k=args.top_k)
-    print(f"\nTop {len(results)} applicable provisions for:\n  \"{args.issue}\"\n")
-    for i, r in enumerate(results, 1):
-        print(f"{i}. {r.provision.citation()}   (score {r.score:.3f})")
-        print(f"   source: {r.provision.source_url}")
-        print(f"   {r.snippet.strip()[:220]}...\n")
+
+    print(f"\nTop applicable provisions for:\n  \"{args.issue}\"\n")
+    if args.crosswalks:
+        from .graph_lookup import RegulusGraphLookup
+
+        for i, r in enumerate(RegulusGraphLookup(provisions, config).search(args.issue, top_k=args.top_k), 1):
+            print(f"{i}. {r.provision.citation()}   (score {r.score:.3f})")
+            print(f"   source: {r.provision.source_url}")
+            if r.risks:
+                print(f"   risks: {', '.join(r.risks)}")
+            for cx in r.crosswalks:
+                print(f"   ↔ {cx.provision.citation()}  [{cx.relation}; {cx.source}]")
+            print()
+    else:
+        from .lookup import RegulusLookup
+
+        for i, r in enumerate(RegulusLookup(provisions, config).search(args.issue, top_k=args.top_k), 1):
+            print(f"{i}. {r.provision.citation()}   (score {r.score:.3f})")
+            print(f"   source: {r.provision.source_url}")
+            print(f"   {r.snippet.strip()[:220]}...\n")
+    return 0
+
+
+def _cmd_graph(args, config) -> int:
+    from .crosswalk import load_crosswalks
+    from .graph import RegulusGraphBuilder, graph_summary
+
+    ids = [f.strip() for f in args.frameworks.split(",")] if args.frameworks else None
+    provisions = StandardsLoader(config).load(framework_ids=ids)
+    if not provisions:
+        print("No provisions loaded — run `regulus ingest` first.")
+        return 1
+    crosswalks = load_crosswalks()
+    graph = RegulusGraphBuilder().build(provisions, crosswalks)
+    print("\nRegulatory knowledge graph:")
+    for key, count in graph_summary(graph).items():
+        print(f"  {key:22s} {count}")
+    print(f"\nCrosswalk rows in table: {len(crosswalks)}")
     return 0
 
 
@@ -67,7 +97,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_lookup.add_argument("issue", help="free-text issue or observation")
     p_lookup.add_argument("--frameworks", default="", help="comma-separated framework ids (default: all fetchable)")
     p_lookup.add_argument("--top-k", type=int, default=None, help="number of provisions to return")
+    p_lookup.add_argument("--crosswalks", action="store_true", help="also show risks + cited cross-framework references")
     p_lookup.set_defaults(func=_cmd_lookup)
+
+    p_graph = sub.add_parser("graph", help="build the regulatory knowledge graph and print a summary")
+    p_graph.add_argument("--frameworks", default="", help="comma-separated framework ids (default: all fetchable)")
+    p_graph.set_defaults(func=_cmd_graph)
 
     return parser
 
