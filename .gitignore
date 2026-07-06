@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.env
+!.env.example
+.ipynb_checkpoints/
+.pytest_cache/
+.vscode/
+.DS_Store
+[A-Z]:/
+
+# Cached regulatory source documents (downloaded on demand)
+data/standards_cache/
+*.part
+
+# Local artifacts / checkpoints
+artifacts/
+checkpoints/
+*.egg-info/
+build/
+dist/

@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "regulus"
+version = "0.0.1"
+description = "AI governance standards lookup powered by RAG and knowledge graphs, built on the Geometric Knowledge Network."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Min Wu" }]
+keywords = ["ai-governance", "regulation", "rag", "knowledge-graph", "nist-ai-rmf", "eu-ai-act", "model-risk"]
+
+dependencies = [
+    # GKN is the retrieval/graph substrate (installed from git until published).
+    "geometric-knowledge-network @ git+https://github.com/minw0607/geometric_knowledge_network.git",
+    "pypdf>=4.2.0",              # parse regulatory PDFs (e.g. NIST AI RMF)
+    "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+# Cloud/local embeddings for higher-quality retrieval (delegates to GKN).
+embedding = ["sentence-transformers>=3.0.1"]
+cloud = ["openai>=1.30.0"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+regulus = "regulus.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/minw0607/Regulus"
+
+[tool.setuptools.packages.find]
+where = ["src"]
