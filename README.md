@@ -155,7 +155,7 @@ regulus ingest --frameworks eu_ai_act,nist_ai_rmf   # download + parse (cached u
 regulus lookup "our model was not validated for demographic bias" --top-k 5
 ```
 
-The default `tfidf` retriever needs no API keys. For embedding-quality retrieval (delegates to GKN's embedding store — Azure/OpenAI or local), set `REGULUS_RETRIEVER=embedding` in `.env` (see `.env.example`). A full walkthrough is in [`notebooks/01_ingest_and_lookup.ipynb`](notebooks/01_ingest_and_lookup.ipynb).
+The default `tfidf` retriever needs no API keys. For embedding-quality retrieval (delegates to GKN's embedding store — Azure/OpenAI or local), set `REGULUS_RETRIEVER=embedding` in `.env` (see `.env.example`). The full end-to-end walkthrough (ingest → baseline lookup → knowledge graph → crosswalk lookup) is in [`notebooks/regulus_walkthrough.ipynb`](notebooks/regulus_walkthrough.ipynb) — it self-bootstraps GKN from the local checkout, so it runs without a `pip install`.
 
 ---
 
