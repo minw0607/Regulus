@@ -31,3 +31,12 @@ class RegulusConfig:
     top_k: int = field(default_factory=lambda: int(os.getenv("REGULUS_TOP_K", "5")))
     chunk_size: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_SIZE", "900")))
     chunk_overlap: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_OVERLAP", "150")))
+
+    # LLM interpretation layer (optional). Reads the same OPENAI_* env vars as GKN,
+    # so an Azure/OpenAI setup configured for embeddings also powers generation.
+    openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
+    openai_base_url: str = field(default_factory=lambda: os.getenv("OPENAI_BASE_URL", ""))
+    openai_api_version: str = field(default_factory=lambda: os.getenv("OPENAI_API_VERSION", ""))
+    openai_generation_model: str = field(default_factory=lambda: os.getenv("OPENAI_GENERATION_MODEL", "gpt-4o-mini"))
+    openai_apim_header_name: str = field(default_factory=lambda: os.getenv("OPENAI_APIM_HEADER_NAME", ""))
+    openai_apim_subscription_key: str = field(default_factory=lambda: os.getenv("OPENAI_APIM_SUBSCRIPTION_KEY", ""))

@@ -138,8 +138,8 @@ Early MVP — **retrieval + the cited crosswalk graph work end-to-end on real da
 | Issue → applicable provisions (TF-IDF or embeddings) | ✅ |
 | CLI (`regulus ingest` / `lookup` / `graph`) | ✅ |
 | Regulatory knowledge graph + cited crosswalks (67 edges) | ✅ |
+| LLM interpretation / structured answer (grounded + cited) | ✅ |
 | Cross-framework evidence paths | 🔜 |
-| LLM interpretation / structured answer | 🔜 |
 | Web UI | 🔜 |
 
 Even the dependency-light TF-IDF baseline already surfaces the right provisions:

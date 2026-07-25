@@ -247,3 +247,25 @@ def _import_matplotlib():
     except ImportError:
         print("[note] matplotlib is not installed — run `pip install matplotlib` to draw the graph.")
         return None
+
+
+# --- LLM interpretation (Phase 4) -------------------------------------------
+
+def interpret(graph_lookup, issue: str, top_k: int = 5, cfg: Optional[RegulusConfig] = None):
+    """Generate a grounded, cited interpretation of an issue and render it.
+
+    Retrieves the applicable provisions + their relationships, sends that
+    structured context to the configured LLM, and displays the answer. Without an
+    API key it renders the structured context it *would* send (dry run). Returns
+    the ``Interpretation`` object (inspect ``.context`` / ``.citations``)."""
+    from .interpret import RegulusInterpreter
+
+    result = RegulusInterpreter(graph_lookup, cfg or RegulusConfig()).interpret(issue, top_k=top_k)
+    text = f"### Regulus — interpretation\n**Issue:** {issue}\n\n{result.display()}"
+    try:
+        from IPython.display import Markdown, display
+
+        display(Markdown(text))
+    except Exception:
+        print(text)
+    return result
