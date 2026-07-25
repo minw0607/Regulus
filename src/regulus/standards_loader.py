@@ -31,7 +31,13 @@ class StandardsLoader:
         provisions: List[Provision] = []
         for fid, source in selected.items():
             if not source.fetchable or not source.url:
-                print(f"[SKIP] {source.name}: not fetchable ({source.note or 'no source url'}).")
+                # Not fetchable — use a committed reference snapshot if one exists (e.g. ISO structure).
+                snapshot = self._load_snapshot(source)
+                if snapshot is not None:
+                    print(f"[DONE] {source.name}: {len(snapshot)} provisions (reference snapshot).")
+                    provisions.extend(snapshot)
+                else:
+                    print(f"[SKIP] {source.name}: not fetchable ({source.note or 'no source url'}).")
                 continue
             dest = Path(self.config.cache_dir) / source.cache_filename
             try:

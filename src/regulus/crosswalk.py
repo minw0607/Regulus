@@ -15,8 +15,8 @@ from typing import List
 from .ingest.base import provision_uid
 
 
-def _default_path() -> Path:
-    return Path(__file__).resolve().parents[2] / "data" / "crosswalks" / "crosswalks.csv"
+def _default_dir() -> Path:
+    return Path(__file__).resolve().parents[2] / "data" / "crosswalks"
 
 
 @dataclass(frozen=True)
@@ -40,25 +40,32 @@ _REQUIRED = {"source_framework", "source_provision", "target_framework", "target
 
 
 def load_crosswalks(path: Path | None = None) -> List[Crosswalk]:
-    path = Path(path) if path else _default_path()
-    if not path.exists():
-        return []
-    # Drop comment lines (leading '#') before parsing so the CSV can carry notes.
-    lines = [ln for ln in path.read_text(encoding="utf-8").splitlines() if not ln.lstrip().startswith("#")]
-    reader = csv.DictReader(lines)
+    """Load crosswalks from a CSV file, or from every ``*.csv`` in the crosswalks
+    directory when no explicit path is given."""
+    if path is not None:
+        files = [Path(path)]
+    else:
+        d = _default_dir()
+        files = sorted(d.glob("*.csv")) if d.exists() else []
+
     crosswalks: List[Crosswalk] = []
-    for row in reader:
-        if not row or not _REQUIRED <= {k for k, v in row.items() if v}:
+    for file in files:
+        if not file.exists():
             continue
-        crosswalks.append(
-            Crosswalk(
-                source_framework=row["source_framework"].strip(),
-                source_provision=row["source_provision"].strip(),
-                target_framework=row["target_framework"].strip(),
-                target_provision=row["target_provision"].strip(),
-                relation=row["relation"].strip() or "related",
-                rationale=(row.get("rationale") or "").strip(),
-                source=(row.get("source") or "").strip(),
+        # Drop comment lines (leading '#') so the CSV can carry notes.
+        lines = [ln for ln in file.read_text(encoding="utf-8").splitlines() if not ln.lstrip().startswith("#")]
+        for row in csv.DictReader(lines):
+            if not row or not _REQUIRED <= {k for k, v in row.items() if v}:
+                continue
+            crosswalks.append(
+                Crosswalk(
+                    source_framework=row["source_framework"].strip(),
+                    source_provision=row["source_provision"].strip(),
+                    target_framework=row["target_framework"].strip(),
+                    target_provision=row["target_provision"].strip(),
+                    relation=row["relation"].strip() or "related",
+                    rationale=(row.get("rationale") or "").strip(),
+                    source=(row.get("source") or "").strip(),
+                )
             )
-        )
     return crosswalks

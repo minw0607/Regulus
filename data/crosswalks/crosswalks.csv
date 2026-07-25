@@ -15,3 +15,13 @@ nist_ai_rmf,MEASURE 2.10,eu_ai_act,Article 10,related,"Privacy risk measurement 
 nist_ai_rmf,GOVERN 1.1,eu_ai_act,Article 9,related,"Understanding legal/regulatory requirements and risk-management processes corresponds to the risk management system requirement.",curated seed (thematic) — verify vs authoritative crosswalk
 nist_ai_rmf,MANAGE 4.1,eu_ai_act,Article 72,related,"Post-deployment monitoring plans correspond to the post-market monitoring obligations.",curated seed (thematic) — verify vs authoritative crosswalk
 nist_ai_rmf,GOVERN 1.5,eu_ai_act,Article 72,related,"Ongoing monitoring processes correspond to post-market monitoring.",curated seed (thematic) — verify vs authoritative crosswalk
+oecd_ai,Principle 1.3,eu_ai_act,Article 13,related,Transparency & explainability corresponds to the EU AI Act transparency obligations.,curated seed (thematic) — verify
+oecd_ai,Principle 1.3,nist_ai_rmf,MEASURE 2.8,related,Transparency principle corresponds to transparency & accountability measurement.,curated seed (thematic) — verify
+oecd_ai,Principle 1.4,eu_ai_act,Article 15,related,"Robustness, security & safety corresponds to accuracy, robustness & cybersecurity.",curated seed (thematic) — verify
+oecd_ai,Principle 1.4,nist_ai_rmf,MEASURE 2.7,related,Robustness/security principle corresponds to security & resilience measurement.,curated seed (thematic) — verify
+oecd_ai,Principle 1.2,nist_ai_rmf,MEASURE 2.11,related,Human rights & fairness corresponds to fairness/bias evaluation.,curated seed (thematic) — verify
+oecd_ai,Principle 1.5,nist_ai_rmf,GOVERN 1.1,related,Accountability corresponds to governance of legal/regulatory requirements.,curated seed (thematic) — verify
+iso_42001,Clause 6,eu_ai_act,Article 9,related,ISO planning / AI risk assessment corresponds to the EU risk management system.,curated seed (thematic) — verify
+iso_42001,Clause 6,nist_ai_rmf,GOVERN 1.1,related,ISO planning corresponds to governance of risk management.,curated seed (thematic) — verify
+iso_42001,Annex A.5,eu_ai_act,Article 27,related,ISO assessing impacts of AI systems corresponds to the fundamental-rights impact assessment.,curated seed (thematic) — verify
+iso_42001,Annex A.7,eu_ai_act,Article 10,related,ISO data for AI systems corresponds to data and data governance.,curated seed (thematic) — verify

@@ -12,7 +12,9 @@ from typing import Dict
 
 from .ingest.base import FrameworkParser
 from .ingest.eu_ai_act import EUAIActParser
+from .ingest.nist_ai_600_1 import NISTAI600Parser
 from .ingest.nist_ai_rmf import NISTAIRMFParser
+from .ingest.oecd_ai import OECDAIParser
 
 
 @dataclass(frozen=True)
@@ -48,27 +50,46 @@ FRAMEWORK_SOURCES: Dict[str, FrameworkSource] = {
         license="NIST publication — U.S. Government work, not subject to copyright in the United States.",
         snapshot_filename="nist_ai_rmf_provisions.json",  # public-domain; used if pypdf/PDF unavailable
     ),
-    # Fetch-if-available / manual sources (registered for the roadmap; the loader
-    # skips them cleanly if unreachable or without a parser yet).
-    "fed_sr_11_7": FrameworkSource(
-        framework_id="fed_sr_11_7",
-        name="Federal Reserve SR 11-7 (Model Risk Management)",
-        url="https://www.federalreserve.gov/supervisionreg/srletters/sr1107.htm",
-        cache_filename="fed_sr_11_7.html",
-        parser=EUAIActParser(),  # placeholder; a dedicated parser is future work
-        license="U.S. Government work (Federal Reserve).",
-        fetchable=False,
-        note="Federal Reserve site blocks automated fetches on some paths; add a dedicated parser + manual download.",
+    "nist_ai_600_1": FrameworkSource(
+        framework_id="nist_ai_600_1",
+        name="NIST AI 600-1 (GenAI Profile)",
+        url="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+        cache_filename="nist_ai_600_1.pdf",
+        parser=NISTAI600Parser(),
+        license="NIST publication — U.S. Government work, not subject to copyright in the United States.",
+        snapshot_filename="nist_ai_600_1_provisions.json",
     ),
+    "oecd_ai": FrameworkSource(
+        framework_id="oecd_ai",
+        name="OECD AI Principles",
+        url="https://legalinstruments.oecd.org/api/print?ids=648&lang=en",
+        cache_filename="oecd_ai_principles.pdf",
+        parser=OECDAIParser(),
+        license="© OECD. Recommendation OECD/LEGAL/0449; reuse under OECD terms with attribution.",
+        snapshot_filename="oecd_ai_provisions.json",
+    ),
+    # Structure-only (paywalled): no full text, loaded from a curated reference snapshot.
     "iso_42001": FrameworkSource(
         framework_id="iso_42001",
-        name="ISO/IEC 42001:2023 (AI management system)",
+        name="ISO/IEC 42001:2023",
         url="",
         cache_filename="iso_42001.txt",
-        parser=EUAIActParser(),  # placeholder
-        license="ISO copyright — not freely redistributable; reference only.",
+        parser=NISTAIRMFParser(),  # unused; loaded from snapshot only
+        license="ISO copyright — not freely redistributable; clause STRUCTURE referenced only.",
         fetchable=False,
-        note="Paywalled. Reference the clause structure; do not redistribute text.",
+        note="Paywalled. Clause structure/titles only (no normative text); see the standard.",
+        snapshot_filename="iso_42001_structure.json",
+    ),
+    # Registered for the roadmap; needs manual sourcing (site blocks automated fetches).
+    "fed_sr_26_2": FrameworkSource(
+        framework_id="fed_sr_26_2",
+        name="Federal Reserve SR 26-2 (Model Risk Management; supersedes SR 11-7)",
+        url="",
+        cache_filename="fed_sr_26_2.pdf",
+        parser=NISTAIRMFParser(),  # placeholder until a source + parser are added
+        license="U.S. Government work (Federal Reserve).",
+        fetchable=False,
+        note="Supersedes SR 11-7. federalreserve.gov blocks automated fetches — add a manual download + parser.",
     ),
 }
 

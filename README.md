@@ -119,16 +119,25 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 
 ## 📍 Status
 
-Early MVP — **Phase 1 (baseline lookup) works end-to-end on real data.**
+Early MVP — **retrieval + the cited crosswalk graph work end-to-end on real data.**
+
+**Frameworks ingested (260 provisions):**
+
+| Framework | Provisions | State |
+|---|---|:--:|
+| EU AI Act | 113 articles | ✅ real text (EUR-Lex) |
+| NIST AI RMF 1.0 | 72 subcategories | ✅ real text (PDF) |
+| NIST AI 600-1 (GenAI Profile) | 49 action groups | ✅ real text (PDF), keyed to the AI RMF |
+| OECD AI Principles | 10 | ✅ real text (OECD/LEGAL/0449) |
+| ISO/IEC 42001:2023 | 16 clauses/controls | ✅ structure only (paywalled) |
+| Fed SR 26-2 (supersedes SR 11-7) | — | 🔜 needs manual sourcing |
 
 | Capability | State |
 |---|:--:|
-| Ingest real **EU AI Act** (EUR-Lex, 113 articles) | ✅ |
-| Ingest real **NIST AI RMF 1.0** (PDF, 72 subcategories) | ✅ |
-| Download + cache with provenance | ✅ |
+| Download + cache with provenance (+ snapshot fallback, no `pypdf` needed) | ✅ |
 | Issue → applicable provisions (TF-IDF or embeddings) | ✅ |
 | CLI (`regulus ingest` / `lookup` / `graph`) | ✅ |
-| Regulatory knowledge graph + cited crosswalks | ✅ |
+| Regulatory knowledge graph + cited crosswalks (67 edges) | ✅ |
 | Cross-framework evidence paths | 🔜 |
 | LLM interpretation / structured answer | 🔜 |
 | Web UI | 🔜 |

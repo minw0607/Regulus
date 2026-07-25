@@ -83,6 +83,19 @@ class FrameworkParser(Protocol):
         ...
 
 
+def pdf_to_text(raw: bytes) -> str:
+    """Extract text from a PDF byte string (requires pypdf)."""
+    try:
+        from pypdf import PdfReader
+    except ImportError as exc:  # pragma: no cover
+        raise ImportError("pypdf is required to parse this PDF (pip install pypdf).") from exc
+
+    import io
+
+    reader = PdfReader(io.BytesIO(raw))
+    return "\n".join(page.extract_text() or "" for page in reader.pages)
+
+
 def strip_html(fragment: str) -> str:
     """Remove tags and collapse whitespace from an HTML fragment."""
     import html

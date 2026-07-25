@@ -45,6 +45,31 @@ def test_nist_parser_text_mode():
     assert measure.framework_name == "NIST AI RMF 1.0"
 
 
+def test_nist600_parser_text_mode():
+    from regulus.ingest.nist_ai_600_1 import NISTAI600Parser
+
+    text = ("GV-1.1-001 Establish AI governance policies. GV-1.1-002 Document them. "
+            "MS-2.11-001 Evaluate fairness and harmful bias across demographic groups.")
+    provs = NISTAI600Parser().parse(text)
+    ids = {p.provision_id for p in provs}
+    assert {"GV-1.1", "MS-2.11"} <= ids
+    assert "GOVERN" in next(p for p in provs if p.provision_id == "GV-1.1").title
+
+
+def test_oecd_parser_text_mode():
+    from regulus.ingest.oecd_ai import OECDAIParser
+
+    text = (
+        "Principles for responsible stewardship of trustworthy AI\n"
+        "1.1. Inclusive growth and well-being\nStakeholders should engage responsibly.\n"
+        "1.3. Transparency and explainability\nActors should provide meaningful information.\n"
+        "2.1. Investing in AI research\nGovernments should invest in AI research and development to spur innovation."
+    )
+    provs = OECDAIParser().parse(text)
+    ids = {p.provision_id for p in provs}
+    assert "Principle 1.1" in ids and "Principle 1.3" in ids and "Recommendation 2.1" in ids
+
+
 def test_provision_serialization_roundtrip():
     p = Provision("nist_ai_rmf", "NIST AI RMF 1.0", "MEASURE 2.11", "Measure function",
                   "Fairness and bias are evaluated.", "https://x/nist", ["NIST AI RMF 1.0", "MEASURE", "MEASURE 2.11"])

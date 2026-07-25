@@ -18,7 +18,7 @@ import pandas as pd
 from .config import RegulusConfig
 from .ingest.base import Provision
 
-DEFAULT_FRAMEWORKS: tuple[str, ...] = ("eu_ai_act", "nist_ai_rmf")
+DEFAULT_FRAMEWORKS: tuple[str, ...] = ("eu_ai_act", "nist_ai_rmf", "nist_ai_600_1", "oecd_ai", "iso_42001")
 
 
 def ensure_gkn() -> None:
