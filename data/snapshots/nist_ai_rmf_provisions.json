@@ -1,0 +1,938 @@
+[
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.1",
+  "title": "Govern function",
+  "text": "Legal and regulatory requirements involving AI\nare understood, managed, and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.2",
+  "title": "Govern function",
+  "text": "The characteristics of trustworthy AI are inte-\ngrated into organizational policies, processes, procedures, and\npractices.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.3",
+  "title": "Govern function",
+  "text": "Processes, procedures, and practices are in place\nto determine the needed level of risk management activities based\non the organization’s risk tolerance.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.4",
+  "title": "Govern function",
+  "text": "The risk management process and its outcomes are\nestablished through transparent policies, procedures, and other\ncontrols based on organizational risk priorities.\nCategories Subcategories\nContinued on next page\nPage 22\nNIST AI 100-1 AI RMF 1.0\nTable 1: Categories and subcategories for the GOVERN function. (Continued)",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.4"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.5",
+  "title": "Govern function",
+  "text": "Ongoing monitoring and periodic review of the\nrisk management process and its outcomes are planned and or-\nganizational roles and responsibilities clearly defined, including\ndetermining the frequency of periodic review.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.5"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.6",
+  "title": "Govern function",
+  "text": "Mechanisms are in place to inventory AI systems\nand are resourced according to organizational risk priorities.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.6"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 1.7",
+  "title": "Govern function",
+  "text": "Processes and procedures are in place for decom-\nmissioning and phasing out AI systems safely and in a man-\nner that does not increase risks or decrease the organization’s\ntrustworthiness.\nGOVERN 2:\nAccountability\nstructures are in\nplace so that the\nappropriate teams\nand individuals are\nempowered,\nresponsible, and\ntrained for mapping,\nmeasuring, and\nmanaging AI risks.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 1.7"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 2.1",
+  "title": "Govern function",
+  "text": "Roles and responsibilities and lines of communi-\ncation related to mapping, measuring, and managing AI risks are\ndocumented and are clear to individuals and teams throughout\nthe organization.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 2.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 2.2",
+  "title": "Govern function",
+  "text": "The organization’s personnel and partners receive\nAI risk management training to enable them to perform their du-\nties and responsibilities consistent with related policies, proce-\ndures, and agreements.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 2.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 2.3",
+  "title": "Govern function",
+  "text": "Executive leadership of the organization takes re-\nsponsibility for decisions about risks associated with AI system\ndevelopment and deployment.\nGOVERN 3:\nWorkforce diversity,\nequity, inclusion,\nand accessibility\nprocesses are\nprioritized in the\nmapping,\nmeasuring, and\nmanaging of AI\nrisks throughout the\nlifecycle.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 2.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 3.1",
+  "title": "Govern function",
+  "text": "Decision-making related to mapping, measuring,\nand managing AI risks throughout the lifecycle is informed by a\ndiverse team (e.g., diversity of demographics, disciplines, expe-\nrience, expertise, and backgrounds).",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 3.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 3.2",
+  "title": "Govern function",
+  "text": "Policies and procedures are in place to define and\ndifferentiate roles and responsibilities for human-AI configura-\ntions and oversight of AI systems.\nGOVERN 4:\nOrganizational\nteams are committed\nto a culture",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 3.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 4.1",
+  "title": "Govern function",
+  "text": "Organizational policies and practices are in place\nto foster a critical thinking and safety-first mindset in the design,\ndevelopment, deployment, and uses of AI systems to minimize\npotential negative impacts.\nCategories Subcategories\nContinued on next page\nPage 23\nNIST AI 100-1 AI RMF 1.0\nTable 1: Categories and subcategories for the GOVERN function. (Continued)\nthat considers and\ncommunicates AI\nrisk.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 4.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 4.2",
+  "title": "Govern function",
+  "text": "Organizational teams document the risks and po-\ntential impacts of the AI technology they design, develop, deploy,\nevaluate, and use, and they communicate about the impacts more\nbroadly.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 4.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 4.3",
+  "title": "Govern function",
+  "text": "Organizational practices are in place to enable AI\ntesting, identification of incidents, and information sharing.\nGOVERN 5:\nProcesses are in\nplace for robust\nengagement with\nrelevant AI actors.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 4.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 5.1",
+  "title": "Govern function",
+  "text": "Organizational policies and practices are in place\nto collect, consider, prioritize, and integrate feedback from those\nexternal to the team that developed or deployed the AI system\nregarding the potential individual and societal impacts related to\nAI risks.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 5.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 5.2",
+  "title": "Govern function",
+  "text": "Mechanisms are established to enable the team\nthat developed or deployed AI systems to regularly incorporate\nadjudicated feedback from relevant AI actors into system design\nand implementation.\nGOVERN 6: Policies\nand procedures are\nin place to address\nAI risks and benefits\narising from\nthird-party software\nand data and other\nsupply chain issues.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 5.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 6.1",
+  "title": "Govern function",
+  "text": "Policies and procedures are in place that address\nAI risks associated with third-party entities, including risks of in-\nfringement of a third-party’s intellectual property or other rights.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 6.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "GOVERN 6.2",
+  "title": "Govern function",
+  "text": "Contingency processes are in place to handle\nfailures or incidents in third-party data or AI systems deemed to\nbe high-risk.\nCategories Subcategories\n5.2 Map\nThe MAP function establishes the context to frame risks related to an AI system. The AI\nlifecycle consists of many interdependent activities involving a diverse set of actors (See\nFigure 3). In practice, AI actors in charge of one part of the process often do not have full\nvisibility or control over other parts and their associated contexts. The interdependencies\nbetween these activities, and among the relevant AI actors, can make it difficult to reliably\nanticipate impacts of AI systems. For example, early decisions in identifying purposes and\nobjectives of an AI system can alter its behavior and capabilities, and the dynamics of de-\nployment setting (such as end users or impacted individuals) can shape the impacts of AI\nsystem decisions. As a result, the best intentions within one dimension of the AI lifecycle\ncan be undermined via interactions with decisions and conditions in other, later activities.\nPage 24\nNIST AI 100-1 AI RMF 1.0\nThis complexity and varying levels of visibility can introduce uncertainty into risk man-\nag",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "GOVERN",
+   "GOVERN 6.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 1.1",
+  "title": "Map function",
+  "text": "Intended purposes, potentially beneficial uses, context-\nspecific laws, norms and expectations, and prospective settings in\nwhich the AI system will be deployed are understood and docu-\nmented. Considerations include: the specific set or types of users\nalong with their expectations; potential positive and negative im-\npacts of system uses to individuals, communities, organizations,\nsociety, and the planet; assumptions and related limitations about\nAI system purposes, uses, and risks across the development or\nproduct AI lifecycle; and related TEVV and system metrics.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 1.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 1.2",
+  "title": "Map function",
+  "text": "Interdisciplinary AI actors, competencies, skills, and\ncapacities for establishing context reflect demographic diversity\nand broad domain and user experience expertise, and their par-\nticipation is documented. Opportunities for interdisciplinary col-\nlaboration are prioritized.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 1.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 1.3",
+  "title": "Map function",
+  "text": "The organization’s mission and relevant goals for AI\ntechnology are understood and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 1.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 1.4",
+  "title": "Map function",
+  "text": "The business value or context of business use has been\nclearly defined or – in the case of assessing existing AI systems\n– re-evaluated.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 1.4"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 1.5",
+  "title": "Map function",
+  "text": "Organizational risk tolerances are determined and\ndocumented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 1.5"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 1.6",
+  "title": "Map function",
+  "text": "System requirements (e.g., “the system shall respect\nthe privacy of its users”) are elicited from and understood by rel-\nevant AI actors. Design decisions take socio-technical implica-\ntions into account to address AI risks.\nMAP 2:\nCategorization of\nthe AI system is\nperformed.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 1.6"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 2.1",
+  "title": "Map function",
+  "text": "The specific tasks and methods used to implement the\ntasks that the AI system will support are defined (e.g., classifiers,\ngenerative models, recommenders).",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 2.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 2.2",
+  "title": "Map function",
+  "text": "Information about the AI system’s knowledge limits\nand how system output may be utilized and overseen by humans\nis documented. Documentation provides sufficient information\nto assist relevant AI actors when making decisions and taking\nsubsequent actions.\nCategories Subcategories\nContinued on next page\nPage 26\nNIST AI 100-1 AI RMF 1.0\nTable 2: Categories and subcategories for the MAP function. (Continued)",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 2.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 2.3",
+  "title": "Map function",
+  "text": "Scientific integrity and TEVV considerations are iden-\ntified and documented, including those related to experimental\ndesign, data collection and selection (e.g., availability, repre-\nsentativeness, suitability), system trustworthiness, and construct\nvalidation.\nMAP 3: AI\ncapabilities, targeted\nusage, goals, and\nexpected benefits\nand costs compared\nwith appropriate\nbenchmarks are\nunderstood.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 2.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 3.1",
+  "title": "Map function",
+  "text": "Potential benefits of intended AI system functionality\nand performance are examined and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 3.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 3.2",
+  "title": "Map function",
+  "text": "Potential costs, including non-monetary costs, which\nresult from expected or realized AI errors or system functionality\nand trustworthiness – as connected to organizational risk toler-\nance – are examined and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 3.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 3.3",
+  "title": "Map function",
+  "text": "Targeted application scope is specified and docu-\nmented based on the system’s capability, established context, and\nAI system categorization.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 3.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 3.4",
+  "title": "Map function",
+  "text": "Processes for operator and practitioner proficiency\nwith AI system performance and trustworthiness – and relevant\ntechnical standards and certifications – are defined, assessed, and\ndocumented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 3.4"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 3.5",
+  "title": "Map function",
+  "text": "Processes for human oversight are defined, assessed,\nand documented in accordance with organizational policies from\nthe GOVERN function.\nMAP 4: Risks and\nbenefits are mapped\nfor all components\nof the AI system\nincluding third-party\nsoftware and data.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 3.5"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 4.1",
+  "title": "Map function",
+  "text": "Approaches for mapping AI technology and legal risks\nof its components – including the use of third-party data or soft-\nware – are in place, followed, and documented, as are risks of in-\nfringement of a third party’s intellectual property or other rights.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 4.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 4.2",
+  "title": "Map function",
+  "text": "Internal risk controls for components of the AI sys-\ntem, including third-party AI technologies, are identified and\ndocumented.\nMAP 5: Impacts to\nindividuals, groups,\ncommunities,\norganizations, and\nsociety are\ncharacterized.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 4.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 5.1",
+  "title": "Map function",
+  "text": "Likelihood and magnitude of each identified impact\n(both potentially beneficial and harmful) based on expected use,\npast uses of AI systems in similar contexts, public incident re-\nports, feedback from those external to the team that developed\nor deployed the AI system, or other data are identified and\ndocumented.\nCategories Subcategories\nContinued on next page\nPage 27\nNIST AI 100-1 AI RMF 1.0\nTable 2: Categories and subcategories for the MAP function. (Continued)",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 5.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MAP 5.2",
+  "title": "Map function",
+  "text": "Practices and personnel for supporting regular en-\ngagement with relevant AI actors and integrating feedback about\npositive, negative, and unanticipated impacts are in place and\ndocumented.\nCategories Subcategories\n5.3 Measure\nThe MEASURE function employs quantitative, qualitative, or mixed-method tools, tech-\nniques, and methodologies to analyze, assess, benchmark, and monitor AI risk and related\nimpacts. It uses knowledge relevant to AI risks identified in the MAP function and informs\nthe MANAGE function. AI systems should be tested before their deployment and regu-\nlarly while in operation. AI risk measurements include documenting aspects of systems’\nfunctionality and trustworthiness.\nMeasuring AI risks includes tracking metrics for trustworthy characteristics, social impact,\nand human-AI configurations. Processes developed or adopted in the MEASURE function\nshould include rigorous software testing and performance assessment methodologies with\nassociated measures of uncertainty, comparisons to performance benchmarks, and formal-\nized reporting and documentation of results. Processes for independent review can improve\nthe effectiveness of testing and can mitigate internal biases ",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MAP",
+   "MAP 5.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 1.1",
+  "title": "Measure function",
+  "text": "Approaches and metrics for measurement of AI\nrisks enumerated during the MAP function are selected for imple-\nmentation starting with the most significant AI risks. The risks\nor trustworthiness characteristics that will not – or cannot – be\nmeasured are properly documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 1.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 1.2",
+  "title": "Measure function",
+  "text": "Appropriateness of AI metrics and effectiveness\nof existing controls are regularly assessed and updated, including\nreports of errors and potential impacts on affected communities.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 1.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 1.3",
+  "title": "Measure function",
+  "text": "Internal experts who did not serve as front-line\ndevelopers for the system and/or independent assessors are in-\nvolved in regular assessments and updates. Domain experts,\nusers, AI actors external to the team that developed or deployed\nthe AI system, and affected communities are consulted in support\nof assessments as necessary per organizational risk tolerance.\nMEASURE 2: AI\nsystems are\nevaluated for\ntrustworthy\ncharacteristics.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 1.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.1",
+  "title": "Measure function",
+  "text": "Test sets, metrics, and details about the tools used\nduring TEVV are documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.2",
+  "title": "Measure function",
+  "text": "Evaluations involving human subjects meet ap-\nplicable requirements (including human subject protection) and\nare representative of the relevant population.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.3",
+  "title": "Measure function",
+  "text": "AI system performance or assurance criteria\nare measured qualitatively or quantitatively and demonstrated\nfor conditions similar to deployment setting(s). Measures are\ndocumented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.4",
+  "title": "Measure function",
+  "text": "The functionality and behavior of the AI sys-\ntem and its components – as identified in the MAP function – are\nmonitored when in production.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.4"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.5",
+  "title": "Measure function",
+  "text": "The AI system to be deployed is demonstrated\nto be valid and reliable. Limitations of the generalizability be-\nyond the conditions under which the technology was developed\nare documented.\nCategories Subcategories\nContinued on next page\nPage 29\nNIST AI 100-1 AI RMF 1.0\nTable 3: Categories and subcategories for the MEASURE function. (Continued)",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.5"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.6",
+  "title": "Measure function",
+  "text": "The AI system is evaluated regularly for safety\nrisks – as identified in theMAP function. The AI system to be de-\nployed is demonstrated to be safe, its residual negative risk does\nnot exceed the risk tolerance, and it can fail safely, particularly if\nmade to operate beyond its knowledge limits. Safety metrics re-\nflect system reliability and robustness, real-time monitoring, and\nresponse times for AI system failures.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.6"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.7",
+  "title": "Measure function",
+  "text": "AI system security and resilience – as identified\nin the MAP function – are evaluated and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.7"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.8",
+  "title": "Measure function",
+  "text": "Risks associated with transparency and account-\nability – as identified in the MAP function – are examined and\ndocumented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.8"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.9",
+  "title": "Measure function",
+  "text": "The AI model is explained, validated, and docu-\nmented, and AI system output is interpreted within its context –\nas identified in the MAP function – to inform responsible use and\ngovernance.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.9"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.10",
+  "title": "Measure function",
+  "text": "Privacy risk of the AI system – as identified in\nthe MAP function – is examined and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.10"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.11",
+  "title": "Measure function",
+  "text": "Fairness and bias – as identified in the MAP\nfunction – are evaluated and results are documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.11"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.12",
+  "title": "Measure function",
+  "text": "Environmental impact and sustainability of AI\nmodel training and management activities – as identified in the\nMAP function – are assessed and documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.12"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 2.13",
+  "title": "Measure function",
+  "text": "Effectiveness of the employed TEVV met-\nrics and processes in the MEASURE function are evaluated and\ndocumented.\nMEASURE 3:\nMechanisms for\ntracking identified\nAI risks over time\nare in place.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 2.13"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 3.1",
+  "title": "Measure function",
+  "text": "Approaches, personnel, and documentation are\nin place to regularly identify and track existing, unanticipated,\nand emergent AI risks based on factors such as intended and ac-\ntual performance in deployed contexts.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 3.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 3.2",
+  "title": "Measure function",
+  "text": "Risk tracking approaches are considered for\nsettings where AI risks are difficult to assess using currently\navailable measurement techniques or where metrics are not yet\navailable.\nCategories Subcategories\nContinued on next page\nPage 30\nNIST AI 100-1 AI RMF 1.0\nTable 3: Categories and subcategories for the MEASURE function. (Continued)",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 3.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 3.3",
+  "title": "Measure function",
+  "text": "Feedback processes for end users and impacted\ncommunities to report problems and appeal system outcomes are\nestablished and integrated into AI system evaluation metrics.\nMEASURE 4:\nFeedback about\nefficacy of\nmeasurement is\ngathered and\nassessed.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 3.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 4.1",
+  "title": "Measure function",
+  "text": "Measurement approaches for identifying AI risks\nare connected to deployment context(s) and informed through\nconsultation with domain experts and other end users. Ap-\nproaches are documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 4.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 4.2",
+  "title": "Measure function",
+  "text": "Measurement results regarding AI system trust-\nworthiness in deployment context(s) and across the AI lifecycle\nare informed by input from domain experts and relevant AI ac-\ntors to validate whether the system is performing consistently as\nintended. Results are documented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 4.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MEASURE 4.3",
+  "title": "Measure function",
+  "text": "Measurable performance improvements or de-\nclines based on consultations with relevant AI actors, in-\ncluding affected communities, and field data about context-\nrelevant risks and trustworthiness characteristics are identified\nand documented.\nCategories Subcategories\n5.4 Manage\nThe MANAGE function entails allocating risk resources to mapped and measured risks on\na regular basis and as defined by the GOVERN function. Risk treatment comprises plans to\nrespond to, recover from, and communicate about incidents or events.\nContextual information gleaned from expert consultation and input from relevant AI actors\n– established in GOVERN and carried out in MAP – is utilized in this function to decrease\nthe likelihood of system failures and negative impacts. Systematic documentation practices\nestablished in GOVERN and utilized in MAP and MEASURE bolster AI risk management\nefforts and increase transparency and accountability. Processes for assessing emergent risks\nare in place, along with mechanisms for continual improvement.\nAfter completing the MANAGE function, plans for prioritizing risk and regular monitoring\nand improvement will be in place. Framework users will have enhanced capacity t",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MEASURE",
+   "MEASURE 4.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 1.1",
+  "title": "Manage function",
+  "text": "A determination is made as to whether the AI\nsystem achieves its intended purposes and stated objectives and\nwhether its development or deployment should proceed.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 1.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 1.2",
+  "title": "Manage function",
+  "text": "Treatment of documented AI risks is prioritized\nbased on impact, likelihood, and available resources or methods.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 1.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 1.3",
+  "title": "Manage function",
+  "text": "Responses to the AI risks deemed high priority, as\nidentified by the MAP function, are developed, planned, and doc-\numented. Risk response options can include mitigating, transfer-\nring, avoiding, or accepting.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 1.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 1.4",
+  "title": "Manage function",
+  "text": "Negative residual risks (defined as the sum of all\nunmitigated risks) to both downstream acquirers of AI systems\nand end users are documented.\nMANAGE 2:\nStrategies to\nmaximize AI\nbenefits and\nminimize negative\nimpacts are planned,\nprepared,\nimplemented,\ndocumented, and\ninformed by input\nfrom relevant AI\nactors.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 1.4"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 2.1",
+  "title": "Manage function",
+  "text": "Resources required to manage AI risks are taken\ninto account – along with viable non-AI alternative systems, ap-\nproaches, or methods – to reduce the magnitude or likelihood of\npotential impacts.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 2.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 2.2",
+  "title": "Manage function",
+  "text": "Mechanisms are in place and applied to sustain\nthe value of deployed AI systems.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 2.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 2.3",
+  "title": "Manage function",
+  "text": "Procedures are followed to respond to and recover\nfrom a previously unknown risk when it is identified.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 2.3"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 2.4",
+  "title": "Manage function",
+  "text": "Mechanisms are in place and applied, and respon-\nsibilities are assigned and understood, to supersede, disengage, or\ndeactivate AI systems that demonstrate performance or outcomes\ninconsistent with intended use.\nMANAGE 3: AI\nrisks and benefits\nfrom third-party\nentities are\nmanaged.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 2.4"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 3.1",
+  "title": "Manage function",
+  "text": "AI risks and benefits from third-party resources\nare regularly monitored, and risk controls are applied and\ndocumented.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 3.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 3.2",
+  "title": "Manage function",
+  "text": "Pre-trained models which are used for develop-\nment are monitored as part of AI system regular monitoring and\nmaintenance.\nCategories Subcategories\nContinued on next page\nPage 32\nNIST AI 100-1 AI RMF 1.0\nTable 4: Categories and subcategories for the MANAGE function. (Continued)\nMANAGE 4: Risk\ntreatments,\nincluding response\nand recovery, and\ncommunication\nplans for the\nidentified and\nmeasured AI risks\nare documented and\nmonitored regularly.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 3.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 4.1",
+  "title": "Manage function",
+  "text": "Post-deployment AI system monitoring plans\nare implemented, including mechanisms for capturing and eval-\nuating input from users and other relevant AI actors, appeal\nand override, decommissioning, incident response, recovery, and\nchange management.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 4.1"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 4.2",
+  "title": "Manage function",
+  "text": "Measurable activities for continual improvements\nare integrated into AI system updates and include regular engage-\nment with interested parties, including relevant AI actors.",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 4.2"
+  ]
+ },
+ {
+  "framework_id": "nist_ai_rmf",
+  "framework_name": "NIST AI RMF 1.0",
+  "provision_id": "MANAGE 4.3",
+  "title": "Manage function",
+  "text": "Incidents and errors are communicated to relevant\nAI actors, including affected communities. Processes for track-\ning, responding to, and recovering from incidents and errors are\nfollowed and documented.\nCategories Subcategories\n6. AI RMF Profiles\nAI RMF use-case profiles are implementations of the AI RMF functions, categories, and\nsubcategories for a specific setting or application based on the requirements, risk tolerance,\nand resources of the Framework user: for example, an AI RMF hiring profile or an AI\nRMF fair housing profile. Profiles may illustrate and offer insights into how risk can be\nmanaged at various stages of the AI lifecycle or in specific sector, technology, or end-use\napplications. AI RMF profiles assist organizations in deciding how they might best manage\nAI risk that is well-aligned with their goals, considers legal/regulatory requirements and\nbest practices, and reflects risk management priorities.\nAI RMF temporal profiles are descriptions of either the current state or the desired, target\nstate of specific AI risk management activities within a given sector, industry, organization,\nor application context. An AI RMF Current Profile indicates how AI is currently",
+  "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+  "section_path": [
+   "NIST AI RMF 1.0",
+   "MANAGE",
+   "MANAGE 4.3"
+  ]
+ }
+]

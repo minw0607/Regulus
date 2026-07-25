@@ -25,6 +25,9 @@ class FrameworkSource:
     license: str
     fetchable: bool = True
     note: str = ""
+    # Committed snapshot of parsed provisions, used as a fallback when live
+    # download/parsing is unavailable (e.g. pypdf missing). Public-domain sources only.
+    snapshot_filename: str = ""
 
 
 FRAMEWORK_SOURCES: Dict[str, FrameworkSource] = {
@@ -43,6 +46,7 @@ FRAMEWORK_SOURCES: Dict[str, FrameworkSource] = {
         cache_filename="nist_ai_rmf.pdf",
         parser=NISTAIRMFParser(),
         license="NIST publication — U.S. Government work, not subject to copyright in the United States.",
+        snapshot_filename="nist_ai_rmf_provisions.json",  # public-domain; used if pypdf/PDF unavailable
     ),
     # Fetch-if-available / manual sources (registered for the roadmap; the loader
     # skips them cleanly if unreachable or without a parser yet).

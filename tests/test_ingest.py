@@ -45,6 +45,14 @@ def test_nist_parser_text_mode():
     assert measure.framework_name == "NIST AI RMF 1.0"
 
 
+def test_provision_serialization_roundtrip():
+    p = Provision("nist_ai_rmf", "NIST AI RMF 1.0", "MEASURE 2.11", "Measure function",
+                  "Fairness and bias are evaluated.", "https://x/nist", ["NIST AI RMF 1.0", "MEASURE", "MEASURE 2.11"])
+    restored = Provision.from_dict(p.to_dict())
+    assert restored == p
+    assert restored.unique_id() == p.unique_id()
+
+
 def test_provision_helpers():
     p = Provision(
         framework_id="eu_ai_act",

@@ -39,6 +39,29 @@ class Provision:
     def text_hash(self) -> str:
         return sha256(self.full_text().encode("utf-8")).hexdigest()
 
+    def to_dict(self) -> dict:
+        return {
+            "framework_id": self.framework_id,
+            "framework_name": self.framework_name,
+            "provision_id": self.provision_id,
+            "title": self.title,
+            "text": self.text,
+            "source_url": self.source_url,
+            "section_path": list(self.section_path),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Provision":
+        return cls(
+            framework_id=data["framework_id"],
+            framework_name=data["framework_name"],
+            provision_id=data["provision_id"],
+            title=data.get("title", ""),
+            text=data["text"],
+            source_url=data.get("source_url", ""),
+            section_path=list(data.get("section_path", [])),
+        )
+
     @staticmethod
     def _slug(value: str) -> str:
         return slug(value)

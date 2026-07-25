@@ -39,10 +39,30 @@ class StandardsLoader:
                 raw = dest.read_bytes()
                 parsed = source.parser.parse(raw, source.url)
             except Exception as exc:  # noqa: BLE001 — one bad source shouldn't abort ingest
-                print(f"[WARN] Failed to ingest {source.name}: {exc}")
+                snapshot = self._load_snapshot(source)
+                if snapshot is not None:
+                    print(f"[INFO] {source.name}: live parse unavailable ({exc}); using committed snapshot.")
+                    print(f"[DONE] {source.name}: {len(snapshot)} provisions (snapshot).")
+                    provisions.extend(snapshot)
+                else:
+                    print(f"[WARN] Failed to ingest {source.name}: {exc}")
                 continue
             print(f"[DONE] {source.name}: {len(parsed)} provisions.")
             provisions.extend(parsed)
 
         print(f"[DONE] Loaded {len(provisions)} provisions from {len(selected)} framework(s).")
         return provisions
+
+    def _load_snapshot(self, source) -> List[Provision] | None:
+        import json
+
+        if not source.snapshot_filename:
+            return None
+        path = Path(self.config.repo_root) / "data" / "snapshots" / source.snapshot_filename
+        if not path.exists():
+            return None
+        try:
+            records = json.loads(path.read_text(encoding="utf-8"))
+            return [Provision.from_dict(r) for r in records]
+        except Exception:  # noqa: BLE001
+            return None
