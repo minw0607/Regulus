@@ -60,6 +60,18 @@ def test_risk_tagger_ranks_and_caps():
     assert len(tags) <= 3
 
 
+def test_demo_sample_report():
+    from regulus import demo
+
+    provs = _corpus()
+    cfg = RegulusConfig()
+    cfg.retriever = "tfidf"
+    gl = demo.crosswalk_lookup(provs, cfg)
+    df = demo.sample_report(gl, issues=["model not tested for demographic bias"], top_k=1)
+    assert list(df.columns) == ["issue", "top provision", "risks", "cross-framework references (cited)"]
+    assert len(df) == 1
+
+
 def test_graph_lookup_surfaces_cited_crosswalk():
     provs = _corpus()
     cfg = RegulusConfig()

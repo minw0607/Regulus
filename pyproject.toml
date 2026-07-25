@@ -23,7 +23,8 @@ dependencies = [
 # Cloud/local embeddings for higher-quality retrieval (delegates to GKN).
 embedding = ["sentence-transformers>=3.0.1"]
 cloud = ["openai>=1.30.0"]
-dev = ["pytest>=8.0"]
+viz = ["matplotlib>=3.8"]          # notebook graph visualizations
+dev = ["pytest>=8.0", "matplotlib>=3.8"]
 
 [project.scripts]
 regulus = "regulus.cli:main"
