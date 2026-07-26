@@ -2,21 +2,58 @@
 
 # ⚖️ Regulus
 
-**AI governance standards lookup, powered by RAG and knowledge graphs.**
+**Domain-specialized GraphRAG for AI governance — retrieval + a cited cross-framework knowledge network + grounded LLM interpretation.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Status](https://img.shields.io/badge/Status-Early%20MVP-orange.svg)]()
-[![Frameworks](https://img.shields.io/badge/frameworks-EU%20AI%20Act%20·%20NIST%20AI%20RMF-1baf7a.svg)]()
+[![Status](https://img.shields.io/badge/Status-Working%20MVP-1baf7a.svg)]()
+[![Frameworks](https://img.shields.io/badge/frameworks-EU%20AI%20Act%20·%20NIST%20RMF%20·%20NIST%20600--1%20·%20OECD%20·%20ISO%2042001-378add.svg)]()
 [![Built on: GKN](https://img.shields.io/badge/built%20on-Geometric%20Knowledge%20Network-2C3E50.svg)](https://github.com/minw0607/geometric_knowledge_network)
 
-*Submit an issue or observation → get applicable risks, regulatory provisions, and cross-referenced guidance — with citations.*
+*Describe an AI system and a scenario → get the **risks**, the **applicable provisions across frameworks** (and why), **what to address first**, and **recommended mitigants** — cited, reproducible, and exportable.*
 
 </div>
 
 ---
 
-> Describe an AI issue in plain language — *"our credit model was deployed without testing for demographic bias"* — and Regulus returns the **provisions that apply**, across frameworks like the **EU AI Act**, **NIST AI RMF**, and Federal Reserve **SR** guidance, each with a **source citation** and (as the graph layer lands) a **traceable evidence path** across frameworks.
+> Describe an AI issue in plain language — *"our credit model was deployed without testing for demographic bias"* — and Regulus returns the **provisions that apply** across the **EU AI Act**, **NIST AI RMF**, **NIST GenAI Profile**, **OECD Principles**, and **ISO/IEC 42001**, each with a **source citation**, links them through a **curated, cited cross-framework knowledge graph**, and interprets them into a structured, grounded assessment.
+
+---
+
+## ✨ See it in action
+
+**The knowledge network — 260 provisions across 5 frameworks, linked by cited crosswalks:**
+
+<div align="center">
+<img src="docs/assets/framework_map.png" width="70%" alt="Cross-framework crosswalk map: node size = number of provisions, edge label = number of cited crosswalks."/>
+</div>
+
+**One scenario's regulatory neighborhood** — the same bias concern expressed across four frameworks. Bold-outlined squares are the direct retrieval hits; plain squares are provisions the graph reaches via cited crosswalks; grey circles are the risks they address:
+
+<div align="center">
+<img src="docs/assets/neighborhood_bias.png" width="82%" alt="Regulatory neighborhood of a demographic-bias scenario, linking EU AI Act Article 10 and NIST GenAI MEASURE 2.11 across NIST RMF and ISO 42001 via crosswalks."/>
+</div>
+
+**Why the graph beats flat RAG — measured, not asserted** (`reg.compare_rag(scenario)`, GenAI-banking scenario, embeddings):
+
+| dimension | flat RAG (similarity only) | Regulus GraphRAG |
+|---|:--:|:--:|
+| provisions surfaced | 5 | **12** |
+| frameworks covered | 1 | **3** |
+| cross-framework links used | 0 | **5** |
+| risks identified | 0 | **7** |
+| prioritized "address-first" | — | **leverage-ranked linchpin** |
+
+Similarity clusters *within a single framework*; the graph follows cited crosswalks to reach the same concern elsewhere, and **leverage re-ranks** the address-first provision away from the similarity top-1.
+
+**Structured, reproducible assessment** (`reg.assess(scenario)`) — risk × standards × control, e.g.:
+
+| risk | relevant provisions (standards) | suggested control / mitigant |
+|---|---|---|
+| Fair — bias managed | EU AI Act Art 10 · NIST RMF MEASURE 2.11 | Test outcomes for disparate impact; govern training data for bias |
+| Accountable & transparent | EU AI Act Art 12 · NIST 600-1 GV-4.2 | Logging/record-keeping and clear ownership across the lifecycle |
+
+Every run of the same scenario produces the **same core** (risks, provisions, controls, priority); only the LLM's prose narrative can vary. Export to Markdown + JSON + CSV with `reg.assess(scenario, export=True)`.
 
 ---
 
@@ -57,31 +94,34 @@ That is the intent: a system that helps you *navigate* the growing sky of AI rul
 
 ## 🎯 Why Regulus
 
-Governance and model-risk questions are **structure** problems, not similarity problems: *which* standard applies to an issue, *how* it maps across frameworks, and *why* — with a defensible citation. That is exactly where a plain vector search is weak and a **knowledge graph over regulatory text** is strong.
+Governance and model-risk questions are **structure** problems, not similarity problems: *which* standard applies to an issue, *how* it maps across frameworks, *why* — with a defensible citation — and *which provision to fix first*. That is exactly where a plain vector search is weak and a **knowledge graph over regulatory text** is strong.
 
-- **Cross-framework by design.** A single issue rarely lives in one framework. Regulus links equivalent provisions across the EU AI Act, NIST AI RMF, SR guidance, and more.
-- **Traceable, not generative-by-default.** Every provision returned is a real, cited unit of an official framework. Cross-framework mappings (crosswalks) are curated/sourced with provenance — **never hallucinated**. A governance tool that invents regulatory mappings is a liability.
-- **Built on a proven substrate.** Regulus is the flagship application of the [Geometric Knowledge Network (GKN)](https://github.com/minw0607/geometric_knowledge_network) — the retrieval + knowledge-graph engine developed specifically for this class of typed-relation, evidence-path problems.
+- **Cross-framework by design.** A single issue rarely lives in one framework. Regulus links equivalent provisions across the EU AI Act, NIST AI RMF, NIST GenAI Profile, OECD, and ISO/IEC 42001 — including *multi-hop* reach that flat similarity retrieval misses entirely.
+- **Traceable, not generative-by-default.** Every provision returned is a real, cited unit of an official framework. Cross-framework mappings (crosswalks) are curated with provenance — **never hallucinated**. A governance tool that invents regulatory mappings is a liability.
+- **Reproducible.** The facts a reviewer relies on (risks, provisions, controls, priority) are computed by code from a single retrieval pass over a fixed data store — identical every run. Only the labeled LLM narrative can vary, and it runs at temperature 0 over the exact same provisions.
+- **Built on a proven substrate.** Regulus is the flagship application of the [Geometric Knowledge Network (GKN)](https://github.com/minw0607/geometric_knowledge_network) — the retrieval + knowledge-graph engine developed for this class of typed-relation, evidence-path problems.
+
+**Positioning.** Regulus is not a full GRC platform (Credo AI, Holistic AI, watsonx.governance, OneTrust). Its edge is **transparency and traceability**: auditable open crosswalks, a reproducible deterministic core, and method rigor — valuable as a transparent internal model-risk tool. The moat is crosswalk-curation quality.
 
 ---
 
 ## 🧭 How it works
 
-Regulus ingests **real** regulatory texts from official sources, splits them into citable **provisions**, and indexes them on the GKN substrate. An issue is matched to the most applicable provisions; the knowledge-graph layer then expands to cross-referenced guidance in other frameworks and returns the evidence path.
+Regulus ingests **real** regulatory texts from official sources, splits them into citable **provision-scoped units**, and indexes them on the GKN substrate. A scenario is matched to the most applicable provisions; the knowledge-graph layer expands to cross-referenced guidance in other frameworks, ranks provisions by leverage, and an LLM interprets the result into a grounded, cited assessment.
 
 ```mermaid
 flowchart LR
-    I(["Issue / observation"]) --> RET["Retrieve<br/>applicable provisions"]
-    C["Regulatory corpus<br/>EU AI Act · NIST AI RMF · ..."] --> RET
-    RET --> G["Graph expansion<br/>cross-framework crosswalks"]
-    G --> INT["Interpretation<br/>structured answer + citations"]
+    I(["Scenario / observation"]) --> RET["Retrieve<br/>applicable provisions"]
+    C["Regulatory corpus<br/>5 frameworks · 260 provisions"] --> RET
+    RET --> G["Graph expansion<br/>cited crosswalks + risks"]
+    G --> PRI["Prioritize<br/>leverage / linchpin"]
+    PRI --> INT["Interpretation<br/>structured, cited assessment"]
+    INT --> EX["Export<br/>MD · JSON · CSV"]
     classDef now fill:#e1f5ee,stroke:#0f6e56,color:#04342c;
-    classDef next fill:#faeeda,stroke:#854f0b,color:#412402;
-    class RET now
-    class G,INT next
+    class RET,G,PRI,INT,EX now
 ```
 
-<div align="center"><sub>🟩 working today &nbsp;·&nbsp; 🟧 planned (graph + interpretation layers)</sub></div>
+<div align="center"><sub>🟩 all stages work end-to-end today</sub></div>
 
 ---
 
@@ -109,19 +149,19 @@ flowchart TD
 
 <div align="center"><sub>Illustrative — crosswalk edges must be authoritative and cited, not inferred.</sub></div>
 
-This graph is **built today** from the ingested corpus plus a curated, cited crosswalk table ([`data/crosswalks/crosswalks.csv`](data/crosswalks/crosswalks.csv)). Run `regulus graph` for a summary, or `regulus lookup "..." --crosswalks` to see an issue's applicable provisions annotated with the risks they address and their cross-framework references — each with its citation. `CROSSWALK` edges come *only* from the curated table (never inferred); `ADDRESSES` risk tags are keyword-derived and marked low-confidence.
+This graph is **built today** from the ingested corpus plus a curated, cited crosswalk table ([`data/crosswalks/`](data/crosswalks/)). Run `regulus graph` for a summary, or `regulus lookup "..." --crosswalks` to see an issue's applicable provisions annotated with the risks they address and their cross-framework references — each with its citation. `CROSSWALK` edges come *only* from the curated table (never inferred); `ADDRESSES` risk tags are keyword-derived and marked low-confidence.
 
-**Node types** — `Framework` · `Provision` (article / control / subcategory) · `RiskCategory` · `Issue` · `Guidance` · `LifecycleStage`
+**Node types** — `Framework` · `Provision` (article / control / subcategory) · `RiskCategory`
 
-**Edge types** — `CONTAINS` (framework→provision) · `ADDRESSES` / `MITIGATES` (provision→risk) · `CROSSWALK` (provision↔provision across frameworks, **cited**) · `REQUIRES` · `APPLIES_TO` (provision→issue) · `CITES` · `INTERPRETS`
+**Edge types** — `CONTAINS` (framework→provision) · `ADDRESSES` (provision→risk, keyword-derived) · `CROSSWALK` (provision↔provision across frameworks, **cited**)
 
 ---
 
 ## 📍 Status
 
-Early MVP — **retrieval + the cited crosswalk graph work end-to-end on real data.**
+**Working MVP — the full pipeline runs end-to-end on real data:** retrieval → cited crosswalk graph → leverage prioritization → grounded, reproducible LLM assessment → export.
 
-**Frameworks ingested (260 provisions):**
+**Frameworks ingested (260 provisions, 67 cited crosswalk edges):**
 
 | Framework | Provisions | State |
 |---|---|:--:|
@@ -135,19 +175,22 @@ Early MVP — **retrieval + the cited crosswalk graph work end-to-end on real da
 | Capability | State |
 |---|:--:|
 | Download + cache with provenance (+ snapshot fallback, no `pypdf` needed) | ✅ |
-| Issue → applicable provisions (TF-IDF or embeddings) | ✅ |
-| CLI (`regulus ingest` / `lookup` / `graph`) | ✅ |
-| Regulatory knowledge graph + cited crosswalks (67 edges) | ✅ |
-| LLM interpretation / structured answer (grounded + cited) | ✅ |
-| Cross-framework evidence paths | 🔜 |
+| Provision-aware indexing · TF-IDF or embeddings (`auto`) | ✅ |
+| Regulatory knowledge graph + cited crosswalks | ✅ |
+| Grounded, cited **LLM interpretation** (dry-run without a key) | ✅ |
+| **Reproducible structured assessment** (risk × standards × control) + export (MD/JSON/CSV) | ✅ |
+| **Graph intelligence** — multi-hop reach · leverage/linchpin · flat-RAG-vs-GraphRAG | ✅ |
+| Coverage report across a categorized scenario set | ✅ |
+| Retrieval eval (hit / recall@k / MRR) | ✅ |
+| Cross-framework evidence paths (GKN path explainer) | 🔜 |
 | Web UI | 🔜 |
 
-Even the dependency-light TF-IDF baseline already surfaces the right provisions:
+**Measured retrieval quality** (provision-aware indexing, 12-case labelled eval): **hit 1.00 · recall@5 0.92 · MRR 0.94**. Examples:
 
 | Issue | Top provision returned |
 |---|---|
 | *"real-time facial recognition in public spaces for law enforcement"* | **EU AI Act, Article 5** — prohibited AI practices |
-| *"model deployed without testing for demographic bias"* | **NIST AI RMF, MEASURE 2.11** — fairness & bias |
+| *"model deployed without testing for demographic bias"* | **NIST GenAI MEASURE 2.11 / EU AI Act Article 10** |
 
 ---
 
@@ -158,13 +201,26 @@ python -m venv .venv && source .venv/bin/activate
 pip install -e .          # installs Regulus + GKN (from git)
 ```
 
+**CLI:**
+
 ```bash
 regulus frameworks                                  # list supported frameworks
 regulus ingest --frameworks eu_ai_act,nist_ai_rmf   # download + parse (cached under data/)
-regulus lookup "our model was not validated for demographic bias" --top-k 5
+regulus lookup "our model was not validated for demographic bias" --top-k 5 --crosswalks
 ```
 
-The default `tfidf` retriever needs no API keys. For embedding-quality retrieval (delegates to GKN's embedding store — Azure/OpenAI or local), set `REGULUS_RETRIEVER=embedding` in `.env` (see `.env.example`). The full end-to-end walkthrough (ingest → baseline lookup → knowledge graph → crosswalk lookup) is in [`notebooks/regulus_ai_governance_lookup.ipynb`](notebooks/regulus_ai_governance_lookup.ipynb) — it self-bootstraps GKN from the local checkout, so it runs without a `pip install`.
+**Python (the one-call facade):**
+
+```python
+from regulus.system import RegulusSystem
+
+reg = RegulusSystem.launch(target_system="A credit-scoring model for consumer loans.")
+reg.overview()                       # app card: models, data store, KN structure, I/O
+reg.assess("model deployed without testing for demographic bias", export=True)
+reg.compare_rag("...")               # flat RAG vs GraphRAG, measured
+```
+
+The default `auto` retriever uses embeddings when an `OPENAI_API_KEY` is available (reused from a sibling GKN `.env`) and TF-IDF otherwise — no API key required to run. For the LLM interpretation layer, `pip install openai`; without it, `assess()` still returns the full deterministic core. The end-to-end walkthrough is in [`notebooks/regulus_ai_governance_lookup.ipynb`](notebooks/regulus_ai_governance_lookup.ipynb) — it self-bootstraps GKN from the local checkout, so it runs without a `pip install`.
 
 ---
 
@@ -173,35 +229,37 @@ The default `tfidf` retriever needs no API keys. For embedding-quality retrieval
 ```mermaid
 flowchart LR
     P1["Phase 1<br/>baseline lookup"] --> P2["Phase 2<br/>regulatory graph<br/>+ cited crosswalks"]
-    P2 --> P3["Phase 3<br/>multi-hop crosswalk<br/>+ evidence paths"]
+    P2 --> P3["Phase 3<br/>graph intelligence<br/>+ reproducible assessment"]
     P3 --> P4["Phase 4<br/>LLM interpretation<br/>structured answer"]
-    P4 --> P5["Phase 5<br/>UI + evaluation"]
+    P4 --> P5["Phase 5<br/>evidence paths + UI"]
     classDef done fill:#e1f5ee,stroke:#0f6e56,color:#04342c;
     classDef todo fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a;
-    class P1,P2 done
-    class P3,P4,P5 todo
+    class P1,P2,P3,P4 done
+    class P5 todo
 ```
 
 - **Phase 1 — baseline lookup** *(done)*: ingest real frameworks, issue → provisions with citations.
-- **Phase 2 — regulatory graph**: frameworks / provisions / risks + curated, **cited** crosswalks.
-- **Phase 3 — multi-hop + crosswalk**: issue → applicable provisions → cross-framework references → evidence paths (via GKN's multi-hop retriever + path explainer).
-- **Phase 4 — interpretation**: LLM synthesis over retrieved provisions + paths → structured answer (risks · standards · cross-refs · guidance · citations).
-- **Phase 5 — interface + eval**: "submit an issue" UI; a benchmark of issue → expected-standards and crosswalk accuracy.
+- **Phase 2 — regulatory graph** *(done)*: frameworks / provisions / risks + curated, **cited** crosswalks.
+- **Phase 3 — graph intelligence + assessment** *(done)*: multi-hop crosswalk reach, leverage/linchpin prioritization, flat-RAG-vs-GraphRAG comparison, and a reproducible risk × standards × control assessment with export.
+- **Phase 4 — interpretation** *(done)*: grounded, cited LLM synthesis over the retrieved provisions + relationships.
+- **Phase 5 — evidence paths + UI** *(next)*: issue → provision → crosswalk → provision paths via GKN's path explainer; a "submit an issue" web UI; a larger issue → expected-standards benchmark; and replacing seed crosswalks with authoritative mappings.
 
 ---
 
 ## 🔗 Relationship to GKN
 
-[GKN](https://github.com/minw0607/geometric_knowledge_network) is the reusable retrieval / knowledge-graph substrate; **Regulus is its flagship governance application.** Regulus depends on GKN as a package and reuses its chunking, vector store, knowledge-graph builder, **multi-hop retriever**, and **path explainer** (the "why does this apply" evidence trail). GKN stays domain-agnostic; Regulus adds the regulatory schema, the standards corpus, and the lookup / interpretation layer.
+[GKN](https://github.com/minw0607/geometric_knowledge_network) is the reusable retrieval / knowledge-graph substrate; **Regulus is its flagship governance application.** Regulus depends on GKN as a package and reuses its chunking, vector store, and knowledge-graph tooling; the planned evidence-path layer will reuse GKN's **multi-hop retriever** and **path explainer**. GKN stays domain-agnostic; Regulus adds the regulatory schema, the standards corpus, provision-aware indexing, the crosswalk curation, and the assessment / interpretation layer.
 
 ---
 
 ## 📄 Data and licensing
 
-Regulus fetches text from official sources at runtime and caches it locally (git-ignored) — it does **not** redistribute regulatory text in this repository.
+Regulus fetches text from official sources at runtime and caches it locally (git-ignored) — it does **not** redistribute regulatory text in this repository (committed snapshots contain parsed structure/titles for offline demo use).
 
 - **EU AI Act** — EUR-Lex (© European Union; reuse permitted with attribution).
-- **NIST AI RMF 1.0** — NIST publication (U.S. Government work).
-- **Fed SR letters / ISO 42001** — registered for the roadmap; ISO text is paywalled and referenced by structure only.
+- **NIST AI RMF 1.0 / AI 600-1** — NIST publications (U.S. Government work).
+- **OECD AI Principles** — OECD/LEGAL/0449.
+- **ISO/IEC 42001** — paywalled; referenced by structure only.
+- **Fed SR letters** — registered for the roadmap; needs manual sourcing.
 
 Always verify against the authoritative source before relying on any result. Licensed under the [MIT License](LICENSE).
