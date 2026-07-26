@@ -101,29 +101,54 @@ class RegulusInterpreter:
             blocks.append("\n".join(lines))
         return "\n\n".join(blocks) if blocks else "(no provisions retrieved)", citations
 
-    def interpret(self, issue: str, top_k: int = 5, temperature: float = 0.2, max_tokens: int = 900) -> Interpretation:
+    def interpret(self, issue: str, top_k: int = 5, temperature: float = 0.2, max_tokens: int = 1500) -> Interpretation:
         context, citations = self.build_context(issue, top_k=top_k)
 
         reason = self._llm_unavailable_reason()
         if reason is not None:
             return Interpretation(issue=issue, context=context, citations=citations, note=reason)
 
-        client = self._build_client()
-        response = client.chat.completions.create(
-            model=self.config.openai_generation_model,
-            messages=[
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": _USER_TEMPLATE.format(
-                    target_system=self.target_system, issue=issue, context=context)},
-            ],
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
+        messages = [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {"role": "user", "content": _USER_TEMPLATE.format(
+                target_system=self.target_system, issue=issue, context=context)},
+        ]
+        response = self._chat_create(self._build_client(), messages, temperature, max_tokens)
         answer = response.choices[0].message.content
         return Interpretation(
             issue=issue, context=context, citations=citations,
             answer_markdown=answer, model=self.config.openai_generation_model,
         )
+
+    def _chat_create(self, client, messages, temperature: float, max_tokens: int):
+        """Call chat.completions.create, adapting to model-specific parameter rules.
+
+        Models disagree on `max_tokens` vs `max_completion_tokens` and on whether a
+        custom `temperature` is allowed (newer reasoning models require the default).
+        Try progressively simpler parameter sets until one is accepted."""
+        model = self.config.openai_generation_model
+        base = {"model": model, "messages": messages}
+        attempts = [
+            {**base, "temperature": temperature, "max_completion_tokens": max_tokens},
+            {**base, "max_completion_tokens": max_tokens},               # drop temperature
+            {**base, "temperature": temperature, "max_tokens": max_tokens},
+            {**base, "max_tokens": max_tokens},                          # legacy token param
+            {**base},                                                    # bare minimum
+        ]
+        try:
+            from openai import BadRequestError, UnprocessableEntityError
+            retryable: tuple = (BadRequestError, UnprocessableEntityError, TypeError)
+        except Exception:  # pragma: no cover
+            retryable = (Exception,)
+
+        last = None
+        for kwargs in attempts:
+            try:
+                return client.chat.completions.create(**kwargs)
+            except retryable as exc:  # noqa: PERF203
+                last = exc
+                continue
+        raise last
 
     # ---- LLM client (reuses the Azure/OpenAI config used for embeddings) -----
     def _llm_unavailable_reason(self) -> Optional[str]:
