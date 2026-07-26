@@ -22,6 +22,7 @@ from typing import List, Optional, Sequence
 
 import pandas as pd
 
+from .assess import Assessment, assess
 from .config import RegulusConfig
 from .graph import graph_summary
 from .graph_lookup import RegulusGraphLookup
@@ -30,6 +31,17 @@ from .interpret import Interpretation, RegulusInterpreter
 
 # All frameworks registered today (real text, or reference snapshot for ISO).
 ALL_STANDARDS: tuple[str, ...] = ("eu_ai_act", "nist_ai_rmf", "nist_ai_600_1", "oecd_ai", "iso_42001")
+
+
+def _render_markdown(text: str) -> str:
+    """Render Markdown in a notebook if possible, else print. Returns the text."""
+    try:
+        from IPython.display import Markdown, display
+
+        display(Markdown(text))
+    except Exception:
+        print(text)
+    return text
 
 
 @dataclass
@@ -82,7 +94,81 @@ class RegulusSystem:
         ]
         return pd.DataFrame(rows, columns=["property", "value"])
 
+    def overview(self):
+        """A one-glance 'app card' for the launched system: what it is, the models it
+        uses, the data it covers, the knowledge-network shape, and its I/O contract.
+        Renders as Markdown in a notebook; returns the Markdown string."""
+        import os
+        from collections import Counter
+
+        summary = graph_summary(self.graph_lookup.graph)
+        by_fw = Counter(p.framework_name for p in self.provisions)
+        fw_lines = "\n".join(f"  - {name} — {n} provisions" for name, n in sorted(by_fw.items()))
+        retriever = self.graph_lookup.lookup.retriever
+        embed_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
+        embed_desc = f"`{embed_model}` (dense) " if retriever == "embedding" else "TF-IDF (lexical, no API) "
+        llm_reason = self.interpreter._llm_unavailable_reason()
+        llm_desc = (
+            f"`{self.config.openai_generation_model}` at temperature 0"
+            if llm_reason is None else f"not configured — {llm_reason} (deterministic core still works)"
+        )
+        md = f"""## Regulus — AI-governance standards lookup
+
+**What it is.** Domain-specialized GraphRAG for AI governance. You describe an AI
+system and a scenario; Regulus retrieves the applicable provisions across multiple
+frameworks, links them through a **cited cross-framework knowledge network**, and
+(optionally) has an LLM interpret them into a grounded, cited assessment.
+
+**Models**
+- *Retrieval / embeddings:* {embed_desc}over provision-scoped units.
+- *Generation (interpretation):* {llm_desc}.
+
+**Regulatory data store ({summary.get('node:Provision', 0)} provisions across {len(by_fw)} frameworks)**
+{fw_lines}
+
+**Knowledge network (KN) structure**
+- Nodes: `Framework` → `Provision` → `RiskCategory`.
+- Edges: `CONTAINS` (framework→provision), `ADDRESSES` (provision→risk),
+  `CROSSWALK` (provision↔provision across frameworks — **curated & cited, never
+  LLM-invented**).
+- Size: {summary.get('node:Provision', 0)} provisions · {summary.get('edge:CROSSWALK', 0)} crosswalk edges ·
+  {summary.get('node:RiskCategory', 0)} risk categories.
+
+**Input** — a plain-language scenario/observation (e.g. *"our credit model was
+deployed without testing for demographic bias"*), plus an optional description of
+the system under review.
+
+**Output** — a structured assessment: (1) the **risks**, (2) the **applicable
+provisions** (primary + cited related provisions in other frameworks), and
+(3) an **interpretation with recommended mitigants**, each grounded in a cited
+provision.
+
+**Reproducibility** — the risks and provisions are computed by code from a single
+retrieval pass over a fixed data store, so the same scenario yields the **same
+core** every run. Only the LLM's wording (section 3) may vary; it is labeled and
+runs at temperature 0.
+"""
+        return _render_markdown(md)
+
     # ---- core operations --------------------------------------------------
+    def assess(self, scenario: str, top_k: Optional[int] = None, with_llm: bool = True, render: bool = True):
+        """Full reproducible assessment: risks + applicable/related provisions
+        (deterministic core) + labeled LLM interpretation & mitigants.
+
+        Returns the :class:`Assessment` object; renders its Markdown by default."""
+        result = assess(
+            self.graph_lookup,
+            scenario,
+            top_k=top_k or self.config.top_k,
+            target_system=self.target_system,
+            interpreter=self.interpreter,
+            config=self.config,
+            with_llm=with_llm,
+        )
+        if render:
+            _render_markdown(result.to_markdown())
+        return result
+
     def lookup(self, issue: str, top_k: Optional[int] = None) -> pd.DataFrame:
         top_k = top_k or self.config.top_k
         rows = []
@@ -105,12 +191,7 @@ class RegulusSystem:
         """Interpret an issue and render the (grounded, cited) result as Markdown."""
         result = self.analyze(issue, top_k=top_k)
         text = f"### Regulus — interpretation\n**System under review:** {self.target_system}\n\n**Issue:** {issue}\n\n{result.display()}"
-        try:
-            from IPython.display import Markdown, display
-
-            display(Markdown(text))
-        except Exception:
-            print(text)
+        _render_markdown(text)
         return result
 
     def visualize(self, issue: str, top_k: int = 3):

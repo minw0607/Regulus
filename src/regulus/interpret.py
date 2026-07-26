@@ -48,12 +48,11 @@ CONTEXT (retrieved provisions and their cited relationships):
 {context}
 
 Produce a structured response in Markdown:
-1. **Assessment** — what the issue implicates, in 2-3 sentences.
-2. **Applicable provisions** — for each, the citation, *why it applies to this issue*, and the risk(s) it addresses.
-3. **Cross-framework view** — how the concern maps across frameworks, using the crosswalks (note their source).
-4. **Suggested next steps** — concrete, grounded actions.
+1. **Why these provisions apply** — for each provision in the context, one sentence on *why it applies to this specific system/scenario* (cite it).
+2. **Root cause & related provisions** — the root governance gap, and how the cross-framework *related* provisions (the crosswalks) reinforce or extend the primary ones (note their source).
+3. **Recommended mitigants** — concrete, actionable steps to address the risks and root cause. **Each mitigant must be grounded in and cite a specific provision** (the provision's own obligation is the basis) — do not invent obligations.
 
-Cite provisions inline. End with a **Sources** list of the provisions you referenced.
+Cite provisions inline. Keep it practical for a model-risk audience.
 """
 
 
@@ -83,9 +82,8 @@ class RegulusInterpreter:
         self.config = config or RegulusConfig()
         self.target_system = target_system or "(not specified)"
 
-    def build_context(self, issue: str, top_k: int = 5) -> tuple[str, List[str]]:
-        """Assemble the structured, cited context from the graph lookup."""
-        results = self.graph_lookup.search(issue, top_k=top_k)
+    def build_context_from_results(self, results) -> tuple[str, List[str]]:
+        """Assemble the structured, cited context from already-retrieved results."""
         blocks: List[str] = []
         citations: List[str] = []
         for i, r in enumerate(results, 1):
@@ -101,8 +99,16 @@ class RegulusInterpreter:
             blocks.append("\n".join(lines))
         return "\n\n".join(blocks) if blocks else "(no provisions retrieved)", citations
 
-    def interpret(self, issue: str, top_k: int = 5, temperature: float = 0.2, max_tokens: int = 1500) -> Interpretation:
-        context, citations = self.build_context(issue, top_k=top_k)
+    def build_context(self, issue: str, top_k: int = 5) -> tuple[str, List[str]]:
+        return self.build_context_from_results(self.graph_lookup.search(issue, top_k=top_k))
+
+    def interpret(self, issue: str, top_k: int = 5, temperature: float = 0.0, max_tokens: int = 1500) -> Interpretation:
+        return self.interpret_results(issue, self.graph_lookup.search(issue, top_k=top_k), temperature, max_tokens)
+
+    def interpret_results(self, issue: str, results, temperature: float = 0.0, max_tokens: int = 1500) -> Interpretation:
+        """Interpret a *precomputed* result set (so the narrative uses the exact same
+        retrieved provisions as the deterministic assessment)."""
+        context, citations = self.build_context_from_results(results)
 
         reason = self._llm_unavailable_reason()
         if reason is not None:
@@ -120,31 +126,30 @@ class RegulusInterpreter:
             answer_markdown=answer, model=self.config.openai_generation_model,
         )
 
-    def _chat_create(self, client, messages, temperature: float, max_tokens: int):
+    def _chat_create(self, client, messages, temperature: float, max_tokens: int, seed: int = 7):
         """Call chat.completions.create, adapting to model-specific parameter rules.
 
-        Models disagree on `max_tokens` vs `max_completion_tokens` and on whether a
-        custom `temperature` is allowed (newer reasoning models require the default).
-        Try progressively simpler parameter sets until one is accepted."""
+        Models disagree on `max_tokens` vs `max_completion_tokens`, on whether a
+        custom `temperature` is allowed (newer reasoning models require the default),
+        and on `seed`. We request temperature 0 + a fixed seed first (for best-effort
+        reproducibility) and fall back through every combination until one is accepted."""
+        from itertools import product
+
         model = self.config.openai_generation_model
         base = {"model": model, "messages": messages}
-        attempts = [
-            {**base, "temperature": temperature, "max_completion_tokens": max_tokens},
-            {**base, "max_completion_tokens": max_tokens},               # drop temperature
-            {**base, "temperature": temperature, "max_tokens": max_tokens},
-            {**base, "max_tokens": max_tokens},                          # legacy token param
-            {**base},                                                    # bare minimum
-        ]
         try:
             from openai import BadRequestError, UnprocessableEntityError
             retryable: tuple = (BadRequestError, UnprocessableEntityError, TypeError)
         except Exception:  # pragma: no cover
             retryable = (Exception,)
 
+        token_opts = [{"max_completion_tokens": max_tokens}, {"max_tokens": max_tokens}, {}]
+        temp_opts = [{"temperature": temperature}, {}]
+        seed_opts = [{"seed": seed}, {}]
         last = None
-        for kwargs in attempts:
+        for tok, tmp, sd in product(token_opts, temp_opts, seed_opts):
             try:
-                return client.chat.completions.create(**kwargs)
+                return client.chat.completions.create(**base, **tok, **tmp, **sd)
             except retryable as exc:  # noqa: PERF203
                 last = exc
                 continue
