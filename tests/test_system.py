@@ -71,7 +71,52 @@ def test_assess_is_deterministic_core_and_reproducible():
     # deterministic core is identical across runs
     assert [p.citation for p in a1.primary] == [p.citation for p in a2.primary]
     assert a1.risks == a2.risks
+    assert [p.citation for p in a1.priority] == [p.citation for p in a2.priority]
     assert a1.to_markdown() == a2.to_markdown()  # dry run: no LLM variation at all
     # structure: at least one applicable provision, LLM section labeled as unavailable
     assert a1.primary
     assert a1.interpretation is not None and a1.interpretation.answer_markdown is None
+    # tabular views + priority present
+    assert list(a1.risk_table().columns) == ["risk", "relevant provisions (standards)", "suggested control / mitigant"]
+    assert a1.priority and a1.linchpin is not None
+
+
+def test_assess_export_writes_files(tmp_path):
+    cfg = RegulusConfig()
+    cfg.retriever = "tfidf"
+    cfg.openai_api_key = ""
+
+    from regulus.graph_lookup import RegulusGraphLookup
+    from regulus.interpret import RegulusInterpreter
+
+    provs = _corpus()
+    gl = RegulusGraphLookup(provs, cfg)
+    reg = RegulusSystem(cfg, provs, gl, RegulusInterpreter(gl, cfg), target_system="A credit model")
+
+    a = reg.assess("bias not tested", top_k=2, render=False)
+    folder = reg.export(a, out_dir=str(tmp_path))
+    assert (folder / "assessment.md").exists()
+    assert (folder / "assessment.json").exists()
+    assert (folder / "risks.csv").exists()
+
+    import json
+    data = json.loads((folder / "assessment.json").read_text())
+    assert set(data) >= {"scenario", "risks", "primary_provisions", "priority", "graph_reach", "controls"}
+
+
+def test_compare_rag_and_coverage_shapes():
+    cfg = RegulusConfig()
+    cfg.retriever = "tfidf"
+    cfg.openai_api_key = ""
+
+    from regulus.graph_lookup import RegulusGraphLookup
+    from regulus.interpret import RegulusInterpreter
+
+    provs = _corpus()
+    gl = RegulusGraphLookup(provs, cfg)
+    reg = RegulusSystem(cfg, provs, gl, RegulusInterpreter(gl, cfg))
+
+    cmp = reg.compare_rag("bias fairness data", render=False)
+    assert list(cmp.columns) == ["dimension", "flat RAG (similarity only)", "Regulus GraphRAG"]
+    cov = reg.coverage({"bias": "bias fairness data governance"})
+    assert list(cov.columns) == ["scenario", "top provision", "frameworks hit", "risks identified", "risk categories"]

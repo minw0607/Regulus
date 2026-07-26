@@ -53,6 +53,11 @@ def retrieval_report(system, top_k: int = 5) -> pd.DataFrame:
     return system.evaluate_retrieval(top_k=top_k)
 
 
+def coverage_report(system, scenarios: Optional[dict] = None, top_k: int = 5) -> pd.DataFrame:
+    """Run a categorized scenario set and show which frameworks/risks each exercises."""
+    return system.coverage(scenarios or SCENARIOS, top_k=top_k)
+
+
 def launch(standards=None, retriever=None, target_system: str = "", top_k=None):
     """Configure and launch the Regulus system (RAG + knowledge network) in one call.
 
@@ -145,6 +150,62 @@ SAMPLE_ISSUES = [
     "Users are not told when they are interacting with an AI system.",
     "No human can review or override the model's automated decisions.",
 ]
+
+# Categorized hypothetical scenarios — one per governance theme, chosen to
+# exercise coverage across the corpus (prohibited use, bias, transparency, human
+# oversight, safety/robustness, security, privacy, record-keeping, risk
+# management, monitoring, documentation, rights impact, and GenAI-specific harms).
+SCENARIOS: dict[str, str] = {
+    "Prohibited use — biometric surveillance": (
+        "We run real-time facial recognition in public spaces to identify individuals for law "
+        "enforcement, without a judicial warrant or narrowly-defined exception."
+    ),
+    "Bias — credit underwriting": (
+        "We deployed a consumer credit-underwriting model that approves or declines loans. It went "
+        "live without testing outcomes for disparate impact across protected classes, and the "
+        "training data was never examined for representativeness or bias."
+    ),
+    "Transparency — undisclosed chatbot": (
+        "Our customer-service chatbot interacts with the public but users are never told they are "
+        "talking to an AI system rather than a human agent."
+    ),
+    "Human oversight — automated decisions": (
+        "Our AI ranks and rejects job applicants automatically, and no human can review, question, "
+        "or override the model's decisions before candidates are dropped."
+    ),
+    "Safety & robustness — unvalidated high-risk system": (
+        "A high-risk medical-triage model was put into production without documented validation of "
+        "its accuracy and robustness, and it behaves unpredictably on inputs unlike its training data."
+    ),
+    "Security — adversarial & prompt injection": (
+        "Our public LLM assistant has no defences against prompt injection or data-poisoning, and we "
+        "have done no adversarial or cybersecurity testing of the model or its data pipeline."
+    ),
+    "Privacy — personal data governance": (
+        "Our model was trained on customer records containing personal and special-category data with "
+        "no DPIA, no data-minimisation, and no defined retention or access controls."
+    ),
+    "Record-keeping — no logging": (
+        "Our high-risk AI system keeps no logs or records of its operation, so its decisions cannot "
+        "be traced or reconstructed after the fact."
+    ),
+    "Risk management — no process": (
+        "We have no risk-management system for our high-risk AI: risks are not identified, evaluated, "
+        "or mitigated on any ongoing basis across the lifecycle."
+    ),
+    "Post-market monitoring — none": (
+        "Once our high-risk AI system was deployed we put no post-market monitoring in place, so we "
+        "would not detect performance degradation, drift, or emerging harms."
+    ),
+    "Documentation & rights impact": (
+        "We produced no technical documentation for our high-risk system and performed no fundamental-"
+        "rights impact assessment before deploying it in a public-services context."
+    ),
+    "GenAI — hallucination & provenance": (
+        "Our generative-AI banking assistant occasionally states incorrect interest rates and invents "
+        "promotional terms, and it keeps no record of which source documents supported each answer."
+    ),
+}
 
 
 def _node_label(node: dict) -> str:

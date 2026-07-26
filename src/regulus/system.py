@@ -22,7 +22,7 @@ from typing import List, Optional, Sequence
 
 import pandas as pd
 
-from .assess import Assessment, assess
+from .assess import Assessment, _df_to_md, assess
 from .config import RegulusConfig
 from .graph import graph_summary
 from .graph_lookup import RegulusGraphLookup
@@ -151,11 +151,14 @@ runs at temperature 0.
         return _render_markdown(md)
 
     # ---- core operations --------------------------------------------------
-    def assess(self, scenario: str, top_k: Optional[int] = None, with_llm: bool = True, render: bool = True):
-        """Full reproducible assessment: risks + applicable/related provisions
-        (deterministic core) + labeled LLM interpretation & mitigants.
+    def assess(self, scenario: str, top_k: Optional[int] = None, with_llm: bool = True,
+               render: bool = True, export: bool = False, export_dir: str = "artifacts/assessments"):
+        """Full reproducible assessment: risks × standards × controls, graph-leverage
+        priority, cross-framework reach (deterministic core) + labeled LLM narrative.
 
-        Returns the :class:`Assessment` object; renders its Markdown by default."""
+        Returns the :class:`Assessment`; renders its Markdown by default. Set
+        ``export=True`` to also save Markdown/JSON/CSV into ``export_dir`` (the
+        saved folder path is printed and available on ``assessment`` via export)."""
         result = assess(
             self.graph_lookup,
             scenario,
@@ -167,7 +170,73 @@ runs at temperature 0.
         )
         if render:
             _render_markdown(result.to_markdown())
+        if export:
+            folder = self.export(result, out_dir=export_dir)
+            print(f"[saved] {folder}")
         return result
+
+    def export(self, assessment, out_dir: str = "artifacts/assessments"):
+        """Save an assessment (Markdown + JSON + CSV tables) to a local folder."""
+        from .export import export_assessment
+
+        return export_assessment(assessment, out_dir=out_dir)
+
+    def priority(self, scenario: str, top_k: Optional[int] = None) -> pd.DataFrame:
+        """Graph-leverage ranking of the retrieved provisions (linchpin first)."""
+        from .graph_intelligence import prioritize
+
+        results = self.graph_lookup.search(scenario, top_k=top_k or self.config.top_k)
+        items = prioritize(self.graph_lookup, results)
+        rows = [{
+            "rank": i,
+            "provision": p.citation,
+            "relevance": p.relevance,
+            "frameworks linked": ", ".join(p.frameworks_linked),
+            "findings connected": len(p.connected_findings),
+            "leverage": p.leverage,
+            "priority score": p.priority,
+        } for i, p in enumerate(items, 1)]
+        return pd.DataFrame(rows)
+
+    def compare_rag(self, scenario: str, top_k: Optional[int] = None, render: bool = True) -> pd.DataFrame:
+        """Flat RAG vs GraphRAG on this scenario — what the knowledge network adds."""
+        from .graph_intelligence import rag_vs_graph
+
+        c = rag_vs_graph(self.graph_lookup, scenario, top_k=top_k or self.config.top_k)
+        rows = [
+            ("provisions surfaced", c.flat_provisions, c.flat_provisions + c.graph_extra_provisions),
+            ("frameworks covered", len(c.flat_frameworks), len(c.graph_frameworks)),
+            ("cross-framework links used", 0, c.crosswalk_links),
+            ("risks identified", 0, len(c.risks_identified)),
+            ("prioritized 'address-first'", "—", c.linchpin or "—"),
+        ]
+        df = pd.DataFrame(rows, columns=["dimension", "flat RAG (similarity only)", "Regulus GraphRAG"])
+        if render:
+            note = ("" if c.linchpin_is_top1 else
+                    f"\n\n_Note: leverage re-ranked the priority away from the similarity top-1 — "
+                    f"the graph considers **{c.linchpin}** the highest-impact provision to address first._")
+            _render_markdown(f"### Flat RAG vs Regulus GraphRAG — *{scenario[:80]}*\n\n"
+                             + _df_to_md(df) + note)
+        return df
+
+    def coverage(self, scenarios, top_k: Optional[int] = None) -> pd.DataFrame:
+        """Run several scenarios and report which frameworks, risks and provisions
+        get exercised — a quick view of how well the corpus covers a test set."""
+        top_k = top_k or self.config.top_k
+        items = scenarios.items() if isinstance(scenarios, dict) else [(s, s) for s in scenarios]
+        rows = []
+        for name, text in items:
+            results = self.graph_lookup.search(text, top_k=top_k)
+            frameworks = sorted({r.provision.framework_name for r in results})
+            risks = sorted({risk for r in results for risk in r.risks})
+            rows.append({
+                "scenario": name if isinstance(scenarios, dict) else name[:50],
+                "top provision": results[0].provision.citation() if results else "—",
+                "frameworks hit": len(frameworks),
+                "risks identified": len(risks),
+                "risk categories": ", ".join(risks) or "—",
+            })
+        return pd.DataFrame(rows)
 
     def lookup(self, issue: str, top_k: Optional[int] = None) -> pd.DataFrame:
         top_k = top_k or self.config.top_k
