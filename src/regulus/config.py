@@ -33,7 +33,8 @@ class RegulusConfig:
 
     # Retrieval. "tfidf" needs no extra deps; "embedding" uses the GKN embedding
     # store (Azure/OpenAI or local sentence-transformers, per GKN's own env vars).
-    retriever: str = field(default_factory=lambda: os.getenv("REGULUS_RETRIEVER", "tfidf").lower())
+    # 'auto' = embeddings when a cloud key is available, else TF-IDF. Or force 'tfidf' / 'embedding'.
+    retriever: str = field(default_factory=lambda: os.getenv("REGULUS_RETRIEVER", "auto").lower())
     top_k: int = field(default_factory=lambda: int(os.getenv("REGULUS_TOP_K", "5")))
     chunk_size: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_SIZE", "900")))
     chunk_overlap: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_OVERLAP", "150")))

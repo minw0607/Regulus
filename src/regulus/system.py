@@ -76,7 +76,7 @@ class RegulusSystem:
             ("provisions", str(summary.get("node:Provision", 0))),
             ("crosswalk edges", str(summary.get("edge:CROSSWALK", 0))),
             ("risk categories", str(summary.get("node:RiskCategory", 0))),
-            ("retriever", self.config.retriever),
+            ("retriever", f"{self.graph_lookup.lookup.retriever} (configured: {self.config.retriever})"),
             ("LLM interpretation", f"ready ({self.config.openai_generation_model})" if llm_reason is None else f"not configured — {llm_reason}"),
             ("target system", self.target_system or "(not specified)"),
         ]
@@ -122,3 +122,9 @@ class RegulusSystem:
         from . import demo
 
         return demo.draw_framework_map(self.graph_lookup)
+
+    def evaluate_retrieval(self, eval_set=None, top_k: int = 5) -> pd.DataFrame:
+        """Measure retrieval quality against a labelled issue -> expected-provisions set."""
+        from .eval import retrieval_report
+
+        return retrieval_report(self.graph_lookup, eval_set=eval_set, top_k=top_k)

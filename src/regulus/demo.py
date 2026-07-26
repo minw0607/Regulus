@@ -48,6 +48,11 @@ def config() -> RegulusConfig:
     return RegulusConfig()
 
 
+def retrieval_report(system, top_k: int = 5) -> pd.DataFrame:
+    """Measure retrieval quality on the built-in eval set (hit / recall@k / MRR)."""
+    return system.evaluate_retrieval(top_k=top_k)
+
+
 def launch(standards=None, retriever=None, target_system: str = "", top_k=None):
     """Configure and launch the Regulus system (RAG + knowledge network) in one call.
 

@@ -10,9 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from geometric_knowledge_network.ingest import Document, DocumentIngestor
-
 from .config import RegulusConfig
+from .indexing import build_units
 from .ingest.base import Provision
 
 
@@ -32,26 +31,23 @@ class RegulusLookup:
         self.provisions = provisions
         self._by_id = {p.unique_id(): p for p in provisions}
 
-        documents = [
-            Document(
-                doc_id=p.unique_id(),
-                title=p.citation(),
-                text=p.full_text(),
-                source_path=p.source_url,
-                text_hash=p.text_hash(),
-            )
-            for p in provisions
-        ]
-        self.chunks = DocumentIngestor().chunk_documents(
-            documents, chunk_size=self.config.chunk_size, chunk_overlap=self.config.chunk_overlap
-        )
+        # Provision-aware retrieval units (see indexing.build_units).
+        self.chunks = build_units(provisions, max_chars=self.config.chunk_size)
+        self.retriever = self._resolve_retriever()
         self.vector_store = self._build_vector_store()
         self.vector_store.build(self.chunks)
 
+    def _resolve_retriever(self) -> str:
+        """Resolve 'auto' -> 'embedding' if a cloud key is available, else 'tfidf'."""
+        choice = (self.config.retriever or "auto").lower()
+        if choice == "auto":
+            return "embedding" if self.config.openai_api_key else "tfidf"
+        return choice
+
     def _build_vector_store(self):
-        if self.config.retriever == "embedding":
+        if self.retriever == "embedding":
             # Reuse GKN's embedding store (Azure/OpenAI or local, per GKN env vars),
-            # with its faiss/openai fallbacks.
+            # with its faiss/openai/local fallbacks.
             from geometric_knowledge_network.config import GKNConfig
             from geometric_knowledge_network.vector_store import EmbeddingVectorStore
 
