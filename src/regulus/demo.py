@@ -48,6 +48,17 @@ def config() -> RegulusConfig:
     return RegulusConfig()
 
 
+def launch(standards=None, retriever=None, target_system: str = "", top_k=None):
+    """Configure and launch the Regulus system (RAG + knowledge network) in one call.
+
+    standards: list of framework ids (default: all). retriever: 'tfidf' | 'embedding'.
+    target_system: a description of the AI system under review (used by the LLM).
+    Returns a RegulusSystem with .info() / .lookup() / .analyze() / .visualize()."""
+    from .system import RegulusSystem
+
+    return RegulusSystem.launch(standards=standards, retriever=retriever, target_system=target_system, top_k=top_k)
+
+
 def load_provisions(cfg: Optional[RegulusConfig] = None, frameworks: Sequence[str] = DEFAULT_FRAMEWORKS) -> List[Provision]:
     from .standards_loader import StandardsLoader
 

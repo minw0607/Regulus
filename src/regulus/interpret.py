@@ -38,7 +38,10 @@ not grounded in a cited provision.
 5. Be concise and practical for a governance / model-risk audience.
 """
 
-_USER_TEMPLATE = """ISSUE / OBSERVATION:
+_USER_TEMPLATE = """AI SYSTEM UNDER REVIEW:
+{target_system}
+
+ISSUE / OBSERVATION:
 {issue}
 
 CONTEXT (retrieved provisions and their cited relationships):
@@ -70,9 +73,15 @@ class Interpretation:
 
 
 class RegulusInterpreter:
-    def __init__(self, graph_lookup: RegulusGraphLookup, config: RegulusConfig | None = None) -> None:
+    def __init__(
+        self,
+        graph_lookup: RegulusGraphLookup,
+        config: RegulusConfig | None = None,
+        target_system: str = "",
+    ) -> None:
         self.graph_lookup = graph_lookup
         self.config = config or RegulusConfig()
+        self.target_system = target_system or "(not specified)"
 
     def build_context(self, issue: str, top_k: int = 5) -> tuple[str, List[str]]:
         """Assemble the structured, cited context from the graph lookup."""
@@ -104,7 +113,8 @@ class RegulusInterpreter:
             model=self.config.openai_generation_model,
             messages=[
                 {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": _USER_TEMPLATE.format(issue=issue, context=context)},
+                {"role": "user", "content": _USER_TEMPLATE.format(
+                    target_system=self.target_system, issue=issue, context=context)},
             ],
             temperature=temperature,
             max_tokens=max_tokens,

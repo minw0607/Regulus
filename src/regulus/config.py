@@ -12,6 +12,12 @@ def _repo_root() -> Path:
 
 
 load_dotenv(_repo_root() / ".env")
+# Reuse an existing sibling GKN .env for shared OPENAI_* credentials (Azure/OpenAI),
+# so a setup already configured for GKN embeddings also powers Regulus generation.
+# Regulus/.env (loaded above) and the real environment take precedence.
+_gkn_env = _repo_root().parent / "geometric_knowledge_network" / ".env"
+if _gkn_env.exists():
+    load_dotenv(_gkn_env, override=False)
 
 
 @dataclass
