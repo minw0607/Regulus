@@ -55,6 +55,34 @@ def test_rag_vs_graph_expands_framework_coverage():
     assert c.linchpin
 
 
+def test_summarize_neighborhood_is_deterministic_and_structured():
+    from regulus.graph_intelligence import summarize_neighborhood
+
+    gl = _gl()
+    scenario = "training data not examined for bias; fairness across groups not tested"
+    s1 = summarize_neighborhood(gl, scenario, top_k=2)
+    s2 = summarize_neighborhood(gl, scenario, top_k=2)
+    assert s1.direct_hits and s1.frameworks_in_view
+    assert s1.to_markdown() == s2.to_markdown()  # fully reproducible template
+    md = s1.to_markdown()
+    for token in ("Direct hits", "Cross-framework reach", "Risks in play", "Address first"):
+        assert token in md
+
+
+def test_describe_neighborhood_falls_back_to_template_without_llm():
+    from regulus.graph_intelligence import summarize_neighborhood
+    from regulus.interpret import RegulusInterpreter
+
+    cfg = RegulusConfig()
+    cfg.retriever = "tfidf"
+    cfg.openai_api_key = ""  # no LLM
+    gl = RegulusGraphLookup(_corpus(), cfg)
+    interp = RegulusInterpreter(gl, cfg)
+    summary = summarize_neighborhood(gl, "bias fairness data governance", top_k=2)
+    narrative, reason = interp.describe_neighborhood(summary)
+    assert narrative is None and reason  # signals caller to use summary.to_markdown()
+
+
 def test_control_library_covers_all_risks():
     from regulus.risk import RISK_TAXONOMY
 

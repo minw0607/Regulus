@@ -56,6 +56,34 @@ Cite provisions inline. Keep it practical for a model-risk audience.
 """
 
 
+_GRAPH_SYSTEM_PROMPT = """You are Regulus, an AI-governance assistant. You are given DETERMINISTIC FACTS \
+about one scenario's neighborhood in a regulatory knowledge graph (its directly-retrieved provisions, \
+the related provisions reached across frameworks via cited crosswalks, the risks involved, and the \
+highest-leverage 'linchpin' provision). Write a short, plain reading of that neighborhood.
+
+STRICT RULES:
+1. Use ONLY the provisions and facts given. Never introduce a provision, framework, risk, or mapping \
+that is not in the facts.
+2. Do not change any number, citation, or the linchpin — narrate them, don't revise them.
+3. Follow the requested structure exactly. Be concise (governance / model-risk audience).
+"""
+
+_GRAPH_USER_TEMPLATE = """SCENARIO:
+{scenario}
+
+DETERMINISTIC FACTS (the same data the diagram is drawn from):
+{facts}
+
+Write the reading in Markdown with EXACTLY these four bullets, filling the prose but keeping every \
+citation and number from the facts:
+
+- **What the scenario implicates:** <the direct-hit provision(s), and in one clause why>.
+- **How the frameworks connect:** <the cross-framework provisions reached via crosswalks, and what shared concern links them; if none were reached, say the concern is currently mapped in one framework only>.
+- **Risks in play:** <the risk categories, noting which links the most findings>.
+- **Where to start:** <the linchpin provision and why addressing it has the most leverage>.
+"""
+
+
 @dataclass
 class Interpretation:
     issue: str
@@ -125,6 +153,23 @@ class RegulusInterpreter:
             issue=issue, context=context, citations=citations,
             answer_markdown=answer, model=self.config.openai_generation_model,
         )
+
+    def describe_neighborhood(self, summary, temperature: float = 0.0, max_tokens: int = 500):
+        """LLM 'reading' of a neighborhood, constrained to the deterministic facts.
+
+        ``summary`` is a ``graph_intelligence.NeighborhoodSummary``. Returns the
+        narrative Markdown, or ``None`` (with the reason) when no LLM is available —
+        callers should fall back to ``summary.to_markdown()`` (fully reproducible)."""
+        reason = self._llm_unavailable_reason()
+        if reason is not None:
+            return None, reason
+        facts = summary.to_markdown()
+        messages = [
+            {"role": "system", "content": _GRAPH_SYSTEM_PROMPT},
+            {"role": "user", "content": _GRAPH_USER_TEMPLATE.format(scenario=summary.scenario, facts=facts)},
+        ]
+        response = self._chat_create(self._build_client(), messages, temperature, max_tokens)
+        return response.choices[0].message.content, None
 
     def _chat_create(self, client, messages, temperature: float, max_tokens: int, seed: int = 7):
         """Call chat.completions.create, adapting to model-specific parameter rules.

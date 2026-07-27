@@ -28,7 +28,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import networkx as nx
 
@@ -240,6 +240,83 @@ class RagComparison:
     risks_identified: List[str]
     linchpin: Optional[str]
     linchpin_is_top1: bool          # did leverage re-rank away from the similarity #1?
+
+
+@dataclass
+class NeighborhoodSummary:
+    """Deterministic facts about a scenario's neighborhood — the data behind the
+    ``draw_issue_graph`` figure, in structured form for a templated description."""
+
+    scenario: str
+    direct_hits: List[str]                         # citations of the retrieved seeds
+    reached: List[GraphReach]                       # cross-framework provisions via crosswalks
+    frameworks_in_view: List[str]                   # distinct frameworks across hits + reached
+    risks: List[Tuple[str, int]] = field(default_factory=list)  # (risk name, #seeds addressing)
+    linchpin: Optional[PriorityItem] = None
+    shared_risk: Optional[str] = None               # risk addressed by the most seeds
+
+    def to_markdown(self) -> str:
+        """A fixed-structure, fully-deterministic reading of the neighborhood."""
+        L: List[str] = ["**Reading the neighborhood**\n"]
+        L.append(
+            f"- **Direct hits ({len(self.direct_hits)}):** "
+            + (", ".join(self.direct_hits) if self.direct_hits else "—")
+            + ". The provisions this scenario most directly implicates (bold-outlined squares)."
+        )
+        if self.reached:
+            reached_str = ", ".join(f"{r.citation}" for r in self.reached)
+            others = [f for f in self.frameworks_in_view]
+            L.append(
+                f"- **Cross-framework reach ({len(self.reached)}):** following cited crosswalks, the "
+                f"graph also connects {reached_str} — the same concern expressed across "
+                f"{len(self.frameworks_in_view)} framework(s) ({', '.join(others)}). "
+                f"Similarity retrieval alone returned only the direct hits."
+            )
+        else:
+            L.append(
+                "- **Cross-framework reach (0):** no further provisions are reachable via crosswalks "
+                "from the direct hits (this concern is currently mapped in one framework only)."
+            )
+        if self.risks:
+            risk_str = ", ".join(name for name, _ in self.risks)
+            tail = f" *{self.shared_risk}* links the most findings." if self.shared_risk else ""
+            L.append(f"- **Risks in play ({len(self.risks)}):** {risk_str} (grey circles).{tail}")
+        if self.linchpin is not None:
+            lp = self.linchpin
+            L.append(
+                f"- **Address first — linchpin:** {lp.citation}. The most connected provision — links "
+                f"{len(lp.frameworks_linked)} framework(s) and shares risks with "
+                f"{len(lp.connected_findings)} other finding(s); fixing it advances the most of the rest."
+            )
+        return "\n".join(L)
+
+
+def summarize_neighborhood(
+    graph_lookup: RegulusGraphLookup, scenario: str, top_k: int = 3, max_hops: int = 2
+) -> NeighborhoodSummary:
+    """Compute the deterministic facts describing a scenario's neighborhood."""
+    results = graph_lookup.search(scenario, top_k=top_k)
+    direct_hits = [r.provision.citation() for r in results]
+    reached = graph_expand(graph_lookup, results, max_hops=max_hops)
+    frameworks = sorted({r.provision.framework_name for r in results} | {r.framework for r in reached if r.framework})
+
+    risk_counts: Dict[str, int] = {}
+    for r in results:
+        for risk in r.risks:
+            risk_counts[risk] = risk_counts.get(risk, 0) + 1
+    risks = sorted(risk_counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    shared_risk = next((name for name, c in risks if c > 1), None)
+
+    prio = prioritize(graph_lookup, results, max_hops=max_hops)
+    return NeighborhoodSummary(
+        scenario=scenario,
+        direct_hits=direct_hits,
+        reached=reached,
+        frameworks_in_view=frameworks,
+        risks=risks,
+        linchpin=prio[0] if prio else None,
+        shared_risk=shared_risk,
+    )
 
 
 def rag_vs_graph(
