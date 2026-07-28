@@ -29,10 +29,22 @@ class RegulusLookup:
     def __init__(self, provisions: List[Provision], config: RegulusConfig | None = None) -> None:
         self.config = config or RegulusConfig()
         self.provisions = provisions
-        self._by_id = {p.unique_id(): p for p in provisions}
+
+        # Exclude non-substantive/procedural provisions from retrieval (definitions,
+        # amendments, entry into force, ...) — they impose no obligation and are
+        # noise as hits. They remain in the corpus/graph; they just aren't indexed.
+        indexable = provisions
+        if self.config.filter_non_substantive:
+            from .stoplist import filter_substantive
+
+            indexable, removed = filter_substantive(provisions)
+            if removed:
+                print(f"[INFO] Retrieval index: skipping {len(removed)} non-substantive provision(s) "
+                      f"(definitions/amendments/entry-into-force). Set REGULUS_FILTER_NON_SUBSTANTIVE=0 to keep.")
+        self._by_id = {p.unique_id(): p for p in indexable}
 
         # Provision-aware retrieval units (see indexing.build_units).
-        self.chunks = build_units(provisions, max_chars=self.config.chunk_size)
+        self.chunks = build_units(indexable, max_chars=self.config.chunk_size)
         self.retriever = self._resolve_retriever()
         self.vector_store = self._build_vector_store()
         self.vector_store.build(self.chunks)

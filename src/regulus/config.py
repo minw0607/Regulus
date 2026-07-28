@@ -36,6 +36,12 @@ class RegulusConfig:
     # 'auto' = embeddings when a cloud key is available, else TF-IDF. Or force 'tfidf' / 'embedding'.
     retriever: str = field(default_factory=lambda: os.getenv("REGULUS_RETRIEVER", "auto").lower())
     top_k: int = field(default_factory=lambda: int(os.getenv("REGULUS_TOP_K", "5")))
+    # Skip non-substantive/procedural provisions (definitions, amendments, entry
+    # into force, ...) in retrieval — they impose no obligation and are pure noise
+    # as hits. See stoplist.py. Set REGULUS_FILTER_NON_SUBSTANTIVE=0 to disable.
+    filter_non_substantive: bool = field(
+        default_factory=lambda: os.getenv("REGULUS_FILTER_NON_SUBSTANTIVE", "1") not in ("0", "false", "False")
+    )
     chunk_size: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_SIZE", "900")))
     chunk_overlap: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_OVERLAP", "150")))
 

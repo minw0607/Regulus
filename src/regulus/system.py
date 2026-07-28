@@ -104,6 +104,13 @@ class RegulusSystem:
         summary = graph_summary(self.graph_lookup.graph)
         by_fw = Counter(p.framework_name for p in self.provisions)
         fw_lines = "\n".join(f"  - {name} — {n} provisions" for name, n in sorted(by_fw.items()))
+        n_indexed = len(self.graph_lookup.lookup._by_id)
+        n_total = summary.get("node:Provision", 0)
+        filter_note = (
+            f" ({n_indexed} indexed for retrieval; {n_total - n_indexed} non-substantive "
+            f"provisions — definitions, amendments, entry-into-force — are excluded as noise)"
+            if self.config.filter_non_substantive and n_total > n_indexed else ""
+        )
         retriever = self.graph_lookup.lookup.retriever
         embed_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
         embed_desc = f"`{embed_model}` (dense) " if retriever == "embedding" else "TF-IDF (lexical, no API) "
@@ -123,7 +130,7 @@ frameworks, links them through a **cited cross-framework knowledge network**, an
 - *Retrieval / embeddings:* {embed_desc}over provision-scoped units.
 - *Generation (interpretation):* {llm_desc}.
 
-**Regulatory data store ({summary.get('node:Provision', 0)} provisions across {len(by_fw)} frameworks)**
+**Regulatory data store ({summary.get('node:Provision', 0)} provisions across {len(by_fw)} frameworks{filter_note})**
 {fw_lines}
 
 **Knowledge network (KN) structure**
