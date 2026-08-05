@@ -18,7 +18,10 @@ import pandas as pd
 from .config import RegulusConfig
 from .ingest.base import Provision
 
-DEFAULT_FRAMEWORKS: tuple[str, ...] = ("eu_ai_act", "nist_ai_rmf", "nist_ai_600_1", "oecd_ai", "iso_42001")
+DEFAULT_FRAMEWORKS: tuple[str, ...] = (
+    "eu_ai_act", "nist_ai_rmf", "nist_ai_600_1", "oecd_ai", "iso_42001",
+    "mitre_atlas", "owasp_llm_top10",
+)
 
 
 def ensure_gkn() -> None:
@@ -131,6 +134,8 @@ _ABBREV = {
     "nist_ai_600_1": "NIST 600-1",
     "oecd_ai": "OECD",
     "iso_42001": "ISO 42001",
+    "mitre_atlas": "ATLAS",
+    "owasp_llm_top10": "OWASP LLM",
 }
 _COLORS = {
     "eu_ai_act": "#378add",      # blue
@@ -138,6 +143,8 @@ _COLORS = {
     "nist_ai_600_1": "#639922",  # green
     "oecd_ai": "#eda100",        # amber
     "iso_42001": "#7f77dd",      # violet
+    "mitre_atlas": "#d1495b",    # red (threat layer)
+    "owasp_llm_top10": "#b3599b",  # magenta (appsec layer)
 }
 
 # A diverse test set spanning frameworks and risk categories.
@@ -204,6 +211,11 @@ SCENARIOS: dict[str, str] = {
     "GenAI — hallucination & provenance": (
         "Our generative-AI banking assistant occasionally states incorrect interest rates and invents "
         "promotional terms, and it keeps no record of which source documents supported each answer."
+    ),
+    "Agentic — autonomous tool use": (
+        "Our AI agent can invoke internal tools (email, database writes, payments) autonomously. It "
+        "acts on content it reads from external websites, there is no human approval step for "
+        "high-impact actions, and its tool permissions are shared across all users."
     ),
 }
 

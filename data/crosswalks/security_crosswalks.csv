@@ -1,0 +1,25 @@
+# Security bridge crosswalks — link the threat layer (OWASP LLM Top 10, MITRE
+# ATLAS) to each other and to the regulatory layer (EU AI Act, NIST). Every row
+# is curated with a rationale grounded in the cited texts; rows marked
+# "textual" quote language that appears in the provision itself. These are the
+# edges that let a scenario hop: regulation -> risk -> threat technique ->
+# concrete mitigation.
+source_framework,source_provision,target_framework,target_provision,relation,rationale,source
+owasp_llm_top10,LLM01,mitre_atlas,AML.T0051,equivalent,"Both describe the same attack: user or external content alters LLM behavior (direct/indirect prompt injection).",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM01,mitre_atlas,AML.T0054,related,"OWASP LLM01 explicitly treats jailbreaking as a form of prompt injection; ATLAS models it as its own technique.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM02,mitre_atlas,AML.T0057,related,"Sensitive information disclosure through model outputs is ATLAS's LLM Data Leakage technique.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM03,mitre_atlas,AML.T0010,related,"LLM supply-chain risk (models, data, plugins, platforms) corresponds to ATLAS AI Supply Chain Compromise.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM04,mitre_atlas,AML.T0020,related,"Data and model poisoning during pre-training/fine-tuning/embedding is ATLAS's Poison Training Data technique.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM08,mitre_atlas,AML.T0070,related,"Vector/embedding weaknesses in RAG systems are exploited by ATLAS's RAG Poisoning technique.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM07,mitre_atlas,AML.T0056,related,"System prompt leakage corresponds to ATLAS's Extract LLM System Prompt technique.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM06,mitre_atlas,AML.M0029,related,"OWASP's Excessive Agency preventions (require human approval for high-impact actions) correspond to ATLAS's Human In-the-Loop for AI Agent Actions mitigation.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM10,mitre_atlas,AML.T0029,related,"Unbounded consumption includes denial-of-service against the model — ATLAS Denial of AI Service.",curated (Regulus) — corroborated by both texts
+owasp_llm_top10,LLM10,mitre_atlas,AML.T0034,related,"Unbounded consumption includes unsustainable inference costs — ATLAS Cost Harvesting.",curated (Regulus) — corroborated by both texts
+mitre_atlas,AML.T0020,eu_ai_act,Article 15,related,"Article 15(5) requires high-risk systems to be resilient against attacks that 'manipulate the training data set (data poisoning)' and 'pre-trained components (model poisoning)' — the attacks this technique performs.",curated (Regulus) — textual: Art 15(5) names data/model poisoning
+mitre_atlas,AML.T0043,eu_ai_act,Article 15,related,"Article 15(5) names 'adversarial examples or model evasion' — crafted adversarial data is the technique that produces them.",curated (Regulus) — textual: Art 15(5) names adversarial examples/evasion
+mitre_atlas,AML.T0057,eu_ai_act,Article 15,related,"Article 15(5) requires resilience against 'confidentiality attacks'; LLM Data Leakage is such an attack on model outputs.",curated (Regulus) — textual: Art 15(5) names confidentiality attacks
+mitre_atlas,AML.T0010,eu_ai_act,Article 25,related,"Compromise of third-party AI components implicates the value-chain responsibilities that Article 25 allocates across providers.",curated (Regulus) — thematic; verify
+mitre_atlas,AML.M0029,eu_ai_act,Article 14,related,"Human-in-the-loop approval of agent actions operationalises Article 14's human-oversight requirement for automated behaviour.",curated (Regulus) — thematic; verify
+owasp_llm_top10,LLM01,nist_ai_rmf,MEASURE 2.7,related,"Prompt-injection resilience is part of measuring AI system security and resilience.",curated (Regulus) — thematic; verify
+owasp_llm_top10,LLM02,nist_ai_rmf,MEASURE 2.10,related,"Disclosure of sensitive/personal information in outputs is what privacy-risk measurement examines.",curated (Regulus) — thematic; verify
+owasp_llm_top10,LLM09,nist_ai_600_1,MS-2.9,related,"OWASP Misinformation (hallucination-driven false content) corresponds to the GenAI Profile's confabulation measurement/documentation actions.",curated (Regulus) — thematic; verify

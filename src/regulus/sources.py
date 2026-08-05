@@ -12,9 +12,11 @@ from typing import Dict
 
 from .ingest.base import FrameworkParser
 from .ingest.eu_ai_act import EUAIActParser
+from .ingest.mitre_atlas import MitreAtlasParser
 from .ingest.nist_ai_600_1 import NISTAI600Parser
 from .ingest.nist_ai_rmf import NISTAIRMFParser
 from .ingest.oecd_ai import OECDAIParser
+from .ingest.owasp_llm import OWASPLLMParser
 
 
 @dataclass(frozen=True)
@@ -67,6 +69,30 @@ FRAMEWORK_SOURCES: Dict[str, FrameworkSource] = {
         parser=OECDAIParser(),
         license="© OECD. Recommendation OECD/LEGAL/0449; reuse under OECD terms with attribution.",
         snapshot_filename="oecd_ai_provisions.json",
+    ),
+    "mitre_atlas": FrameworkSource(
+        framework_id="mitre_atlas",
+        name="MITRE ATLAS",
+        url="https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/ATLAS.yaml",
+        cache_filename="mitre_atlas.yaml",
+        parser=MitreAtlasParser(),
+        license="© MITRE — ATLAS data distributed via github.com/mitre-atlas/atlas-data; cite MITRE ATLAS (atlas.mitre.org).",
+        note="Threat layer: adversarial techniques + mitigations for AI systems (needs pyyaml; snapshot fallback).",
+        snapshot_filename="mitre_atlas_provisions.json",
+    ),
+    # No single-file distribution — ingested from a bundle of the ten official
+    # markdown files (see ingest/owasp_llm.refresh_bundle) and served from the
+    # committed snapshot. CC BY-SA 4.0 permits redistribution with attribution.
+    "owasp_llm_top10": FrameworkSource(
+        framework_id="owasp_llm_top10",
+        name="OWASP Top 10 for LLM (2025)",
+        url="",
+        cache_filename="owasp_llm_top10_2025.md",
+        parser=OWASPLLMParser(),
+        license="© OWASP Foundation — OWASP Top 10 for LLM Applications 2025, CC BY-SA 4.0 (attribution required).",
+        fetchable=False,
+        note="Loaded from committed snapshot; refresh with regulus.ingest.owasp_llm.refresh_bundle().",
+        snapshot_filename="owasp_llm_provisions.json",
     ),
     # Structure-only (paywalled): no full text, loaded from a curated reference snapshot.
     "iso_42001": FrameworkSource(

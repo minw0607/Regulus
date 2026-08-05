@@ -30,7 +30,11 @@ def test_curated_crosswalks_load_and_are_cited():
     cws = load_crosswalks()
     assert cws, "seed crosswalks should load"
     assert all(cw.source for cw in cws), "every crosswalk must carry a source/citation"
-    assert all(cw.source_framework != cw.target_framework for cw in cws), "crosswalks are cross-framework"
+    # Cross-framework rows must exist; intra-framework rows are allowed only for
+    # MITRE ATLAS's authoritative mitigation/hierarchy edges (shipped in its data).
+    assert any(cw.source_framework != cw.target_framework for cw in cws), "cross-framework crosswalks exist"
+    intra = [cw for cw in cws if cw.source_framework == cw.target_framework]
+    assert all(cw.source_framework == "mitre_atlas" for cw in intra), "intra-framework edges only from ATLAS data"
 
 
 def test_graph_builder_nodes_and_cited_crosswalk_edge():

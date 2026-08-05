@@ -30,7 +30,10 @@ from .ingest.base import Provision
 from .interpret import Interpretation, RegulusInterpreter
 
 # All frameworks registered today (real text, or reference snapshot for ISO).
-ALL_STANDARDS: tuple[str, ...] = ("eu_ai_act", "nist_ai_rmf", "nist_ai_600_1", "oecd_ai", "iso_42001")
+ALL_STANDARDS: tuple[str, ...] = (
+    "eu_ai_act", "nist_ai_rmf", "nist_ai_600_1", "oecd_ai", "iso_42001",
+    "mitre_atlas", "owasp_llm_top10",
+)
 
 
 def _render_markdown(text: str) -> str:

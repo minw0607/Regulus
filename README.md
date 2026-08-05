@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Status](https://img.shields.io/badge/Status-Working%20MVP-1baf7a.svg)]()
-[![Frameworks](https://img.shields.io/badge/frameworks-EU%20AI%20Act%20·%20NIST%20RMF%20·%20NIST%20600--1%20·%20OECD%20·%20ISO%2042001-378add.svg)]()
+[![Frameworks](https://img.shields.io/badge/frameworks-EU%20AI%20Act%20·%20NIST%20·%20OECD%20·%20ISO%2042001%20·%20MITRE%20ATLAS%20·%20OWASP%20LLM-378add.svg)]()
 [![Built on: GKN](https://img.shields.io/badge/built%20on-Geometric%20Knowledge%20Network-2C3E50.svg)](https://github.com/minw0607/geometric_knowledge_network)
 
 *Describe an AI system and a scenario → get the **risks**, the **applicable provisions across frameworks** (and why), **what to address first**, and **recommended mitigants** — cited, reproducible, and exportable.*
@@ -16,13 +16,13 @@
 
 ---
 
-> Describe an AI issue in plain language — *"our credit model was deployed without testing for demographic bias"* — and Regulus returns the **provisions that apply** across the **EU AI Act**, **NIST AI RMF**, **NIST GenAI Profile**, **OECD Principles**, and **ISO/IEC 42001**, each with a **source citation**, links them through a **curated, cited cross-framework knowledge graph**, and interprets them into a structured, grounded assessment.
+> Describe an AI issue in plain language — *"our credit model was deployed without testing for demographic bias"* — and Regulus returns the **provisions that apply** across the **EU AI Act**, **NIST AI RMF & GenAI Profile**, **OECD Principles**, **ISO/IEC 42001**, **MITRE ATLAS**, and the **OWASP Top 10 for LLM**, each with a **source citation**, links them through a **cited cross-framework knowledge graph**, and interprets them into a structured, grounded assessment. For security scenarios it chains **regulation → threat technique → concrete mitigation**, with the *signal* (relation + rationale + provenance) shown at every hop.
 
 ---
 
 ## ✨ See it in action
 
-**The knowledge network — 260 provisions across 5 frameworks, linked by cited crosswalks:**
+**The knowledge network — 475 provisions across 7 frameworks (regulatory + threat layers), linked by 400 cited edges:**
 
 <div align="center">
 <img src="docs/assets/framework_map.png" width="70%" alt="Cross-framework crosswalk map: node size = number of provisions, edge label = number of cited crosswalks."/>
@@ -34,17 +34,21 @@
 <img src="docs/assets/neighborhood_bias.png" width="82%" alt="Regulatory neighborhood of a demographic-bias scenario, linking EU AI Act Article 10 and NIST GenAI MEASURE 2.11 across NIST RMF and ISO 42001 via crosswalks."/>
 </div>
 
-**Why the graph beats flat RAG — measured, not asserted** (`reg.compare_rag(scenario)`, GenAI-banking scenario, embeddings):
+**Why the graph beats flat RAG — measured, not asserted** (`reg.compare_rag(scenario)`, prompt-injection scenario):
 
 | dimension | flat RAG (similarity only) | Regulus GraphRAG |
 |---|:--:|:--:|
-| provisions surfaced | 5 | **12** |
-| frameworks covered | 1 | **3** |
-| cross-framework links used | 0 | **5** |
-| risks identified | 0 | **7** |
+| provisions surfaced | 5 | **44** |
+| frameworks covered | 3 | **6** |
+| cross-framework links used | 0 | **16** |
+| risks identified | 0 | **4** |
 | prioritized "address-first" | — | **leverage-ranked linchpin** |
 
-Similarity clusters *within a single framework*; the graph follows cited crosswalks to reach the same concern elsewhere, and **leverage re-ranks** the address-first provision away from the similarity top-1.
+Similarity clusters *within a framework*; the graph follows cited crosswalks — including **multi-hop chains with a signal at every step**:
+
+> EU AI Act **Article 15** → *(Art 15(5) names "adversarial examples or model evasion")* → ATLAS **Craft Adversarial Data** → *(mitigates: "hardened models are more robust to adversarial inputs")* → ATLAS **Model Hardening**
+
+That is a *regulation → threat → control* chain no similarity search produces — every hop cited, every link explained.
 
 **Structured, reproducible assessment** (`reg.assess(scenario)`) — risk × standards × control, e.g.:
 
@@ -151,9 +155,9 @@ flowchart TD
 
 This graph is **built today** from the ingested corpus plus a curated, cited crosswalk table ([`data/crosswalks/`](data/crosswalks/)). Run `regulus graph` for a summary, or `regulus lookup "..." --crosswalks` to see an issue's applicable provisions annotated with the risks they address and their cross-framework references — each with its citation. `CROSSWALK` edges come *only* from the curated table (never inferred); `ADDRESSES` risk tags are keyword-derived and marked low-confidence.
 
-**Node types** — `Framework` · `Provision` (article / control / subcategory) · `RiskCategory`
+**Node types** — `Framework` · `Provision` (article / control / subcategory / threat technique / mitigation) · `RiskCategory`
 
-**Edge types** — `CONTAINS` (framework→provision) · `ADDRESSES` (provision→risk, keyword-derived) · `CROSSWALK` (provision↔provision across frameworks, **cited**)
+**Edge types** — `CONTAINS` (framework→provision) · `ADDRESSES` (provision→risk, keyword-derived) · `CROSSWALK` (provision↔provision, **cited**; includes `equivalent`/`related` cross-framework mappings and MITRE ATLAS's authoritative `mitigates`/`specializes` links, each carrying its own rationale — the *signal* shown at every hop)
 
 ---
 
@@ -161,7 +165,7 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 
 **Working MVP — the full pipeline runs end-to-end on real data:** retrieval → cited crosswalk graph → leverage prioritization → grounded, reproducible LLM assessment → export.
 
-**Frameworks ingested (260 provisions, 67 cited crosswalk edges):**
+**Frameworks ingested (475 provisions, 400 cited crosswalk/mitigation edges):**
 
 | Framework | Provisions | State |
 |---|---|:--:|
@@ -170,6 +174,9 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 | NIST AI 600-1 (GenAI Profile) | 49 action groups | ✅ real text (PDF), keyed to the AI RMF |
 | OECD AI Principles | 10 | ✅ real text (OECD/LEGAL/0449) |
 | ISO/IEC 42001:2023 | 16 clauses/controls | ✅ structure only (paywalled) |
+| **MITRE ATLAS** (threat layer) | 170 techniques + 35 mitigations | ✅ machine-readable `ATLAS.yaml` — incl. **authoritative mitigation→technique edges with per-link rationales** |
+| **OWASP Top 10 for LLM (2025)** | 10 risks incl. preventions | ✅ official per-risk markdown (CC BY-SA 4.0) |
+| OWASP Agentic AI (T1–T17 / ASI) | — | 🔜 next |
 | Fed SR 26-2 (supersedes SR 11-7) | — | 🔜 needs manual sourcing |
 
 | Capability | State |
@@ -185,7 +192,7 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 | Cross-framework evidence paths (GKN path explainer) | 🔜 |
 | Web UI | 🔜 |
 
-**Measured retrieval quality** (provision-aware indexing, 12-case labelled eval): **hit 1.00 · recall@5 0.92 · MRR 0.94**. Examples:
+**Measured retrieval quality** (provision-aware indexing; 12 regulatory cases with embeddings: **hit 1.00 · recall@5 0.92 · MRR 0.94**; the eval set now spans 16 cases including security/threat phrasing — tracked in the notebook). Examples:
 
 | Issue | Top provision returned |
 |---|---|

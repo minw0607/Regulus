@@ -25,6 +25,15 @@ EVAL_SET: List[Tuple[str, List[str]]] = [
     ("No fundamental rights impact assessment was performed", ["eu_ai_act::article_27"]),
     ("Training data was not examined for bias or properly governed", ["eu_ai_act::article_10", "iso_42001::annex_a_7"]),
     ("No technical documentation of the high-risk system", ["eu_ai_act::article_11"]),
+    # Security / threat layer (OWASP LLM Top 10 + MITRE ATLAS)
+    ("Attackers can inject instructions via retrieved web content to alter our LLM's behaviour",
+     ["owasp_llm_top10::llm01", "mitre_atlas::aml_t0051"]),
+    ("An attacker could poison our model's training data (data poisoning)",
+     ["owasp_llm_top10::llm04", "mitre_atlas::aml_t0020"]),
+    ("The chatbot can be tricked into revealing its system prompt",
+     ["owasp_llm_top10::llm07", "mitre_atlas::aml_t0056"]),
+    ("Our AI agent invokes tools autonomously with no human approval for high-impact actions",
+     ["owasp_llm_top10::llm06", "mitre_atlas::aml_m0029"]),
 ]
 
 

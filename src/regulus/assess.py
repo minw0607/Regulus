@@ -50,6 +50,7 @@ class RelatedProvision:
     relation: str
     source: str          # citation/provenance of the crosswalk mapping
     related_to: str      # the primary provision this crosswalk hangs off
+    rationale: str = ""  # the mapping's own explanation of WHY they are linked
 
 
 @dataclass
@@ -103,8 +104,9 @@ class Assessment:
             "framework": r.framework,
             "hops": r.hops,
             "path": " → ".join(r.path),
+            "why linked (signal)": (f"{r.relation}: {r.rationale}" if r.rationale else r.relation),
         } for r in self.graph_reach]
-        return pd.DataFrame(rows, columns=["provision (via graph)", "framework", "hops", "path"])
+        return pd.DataFrame(rows, columns=["provision (via graph)", "framework", "hops", "path", "why linked (signal)"])
 
     # ---- serialization ----------------------------------------------------
     def to_dict(self) -> dict:
@@ -121,7 +123,7 @@ class Assessment:
             ],
             "related_provisions": [
                 {"citation": r.citation, "framework": r.framework, "relation": r.relation,
-                 "source": r.source, "related_to": r.related_to}
+                 "source": r.source, "related_to": r.related_to, "rationale": r.rationale}
                 for r in self.related
             ],
             "priority": [
@@ -132,7 +134,8 @@ class Assessment:
             ],
             "graph_reach": [
                 {"citation": r.citation, "framework": r.framework, "hops": r.hops,
-                 "path": r.path, "relation": r.relation, "source": r.source}
+                 "path": r.path, "relation": r.relation, "source": r.source,
+                 "rationale": r.rationale, "signals": r.signals}
                 for r in self.graph_reach
             ],
             "controls": [
@@ -282,6 +285,7 @@ def assess(
                     relation=cx.relation,
                     source=cx.source,
                     related_to=r.provision.citation(),
+                    rationale=cx.rationale,
                 )
             )
 

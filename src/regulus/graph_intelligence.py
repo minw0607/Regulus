@@ -50,6 +50,8 @@ class GraphReach:
     path: List[str]          # chain of citations from a retrieved seed to here
     relation: str            # relation of the final edge
     source: str              # provenance of the final crosswalk mapping
+    rationale: str = ""      # the edge's own explanation of WHY the two are linked
+    signals: List[str] = field(default_factory=list)  # per-hop "relation: rationale" chain
 
 
 @dataclass
@@ -88,12 +90,15 @@ def graph_expand(
     best: Dict[str, GraphReach] = {}
 
     for seed in seeds:
-        # BFS over crosswalk edges only, tracking the citation path.
+        # BFS over crosswalk edges only, tracking the citation path AND the
+        # per-hop signal chain ("relation: rationale" for every edge walked) —
+        # so a reached provision can explain not just *that* it is related but
+        # *why*, hop by hop.
         start_label = g.nodes[seed].get("label", seed)
-        queue: deque = deque([(seed, 0, [start_label], "", "")])
+        queue: deque = deque([(seed, 0, [start_label], [])])
         visited = {seed}
         while queue:
-            node, hops, path, relation, source = queue.popleft()
+            node, hops, path, signals = queue.popleft()
             if hops >= max_hops:
                 continue
             for nb in g.neighbors(node):
@@ -104,7 +109,9 @@ def graph_expand(
                 nb_label = g.nodes[nb].get("label", nb)
                 nb_path = path + [nb_label]
                 nb_rel = edge.get("relation", "related")
+                nb_rat = edge.get("rationale", "")
                 nb_src = edge.get("source", "")
+                nb_signals = signals + [f"{nb_rel}: {nb_rat}" if nb_rat else nb_rel]
                 if nb not in seed_set:
                     prev = best.get(nb)
                     if prev is None or hops + 1 < prev.hops:
@@ -115,8 +122,10 @@ def graph_expand(
                             path=nb_path,
                             relation=nb_rel,
                             source=nb_src,
+                            rationale=nb_rat,
+                            signals=nb_signals,
                         )
-                queue.append((nb, hops + 1, nb_path, nb_rel, nb_src))
+                queue.append((nb, hops + 1, nb_path, nb_signals))
 
     return sorted(best.values(), key=lambda r: (r.hops, r.framework, r.citation))
 
