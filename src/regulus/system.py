@@ -190,6 +190,45 @@ runs at temperature 0.
             print(f"[saved] {folder}")
         return result
 
+    def top_risks(self, scenario: str, n: int = 3, top_k: Optional[int] = None) -> pd.DataFrame:
+        """Answer 'what are the top N risks here, and why?' — ranked deterministically
+        by the summed relevance of the provisions addressing each risk, with the
+        driving provisions named in the `why` column."""
+        a = assess(self.graph_lookup, scenario, top_k=top_k or self.config.top_k,
+                   target_system=self.target_system, config=self.config, with_llm=False)
+        return a.top_risks(n)
+
+    def assess_batch(self, findings=None, top_k: Optional[int] = None, with_llm: bool = False,
+                     render: bool = True):
+        """Multi-finding review: assess several findings for the same system and
+        consolidate (findings × risks matrix, systemic anchors, review priority).
+        `findings` is a dict name -> text; defaults to a worked banking-assistant
+        review. Deterministic (no LLM) unless with_llm=True."""
+        from .batch import assess_batch
+
+        if findings is None:
+            from . import demo
+
+            findings = {
+                "F1 Hallucinated product terms": demo.SCENARIOS["GenAI — hallucination & provenance"],
+                "F2 Prompt injection exposure": demo.SCENARIOS["Security — adversarial & prompt injection"],
+                "F3 Undisclosed AI to customers": demo.SCENARIOS["Transparency — undisclosed chatbot"],
+                "F4 Agent tool permissions": demo.SCENARIOS["Agentic — autonomous tool use"],
+                "F5 No operation logging": demo.SCENARIOS["Record-keeping — no logging"],
+            }
+        batch = assess_batch(self.graph_lookup, findings, target_system=self.target_system,
+                             top_k=top_k or self.config.top_k, with_llm=with_llm, config=self.config)
+        if render:
+            _render_markdown(batch.to_markdown())
+        return batch
+
+    def consistency_check(self, scenario: str, runs: int = 3, top_k: Optional[int] = None) -> pd.DataFrame:
+        """Multiple-run reproducibility test: assess the same scenario `runs` times and
+        verify the deterministic core hash is identical on every run."""
+        from .batch import consistency_check
+
+        return consistency_check(self.graph_lookup, scenario, runs=runs, top_k=top_k or self.config.top_k)
+
     def export(self, assessment, out_dir: str = "artifacts/assessments"):
         """Save an assessment (Markdown + JSON + CSV tables) to a local folder."""
         from .export import export_assessment

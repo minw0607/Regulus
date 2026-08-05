@@ -200,6 +200,9 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 | **Cross-framework eval** (flat vs graph recall on ≥2-framework cases) | ✅ |
 | **Blind answer-quality A/B** (LLM judge, temperature 0, randomized labels) | ✅ |
 | **Evidence paths** (node —[signal]→ node chains in every assessment) | ✅ |
+| **Top-N risks with explainable ranking** (`reg.top_risks` — score = summed relevance of addressing provisions) | ✅ |
+| **Multi-finding review** (`reg.assess_batch` — findings × risks heatmap, systemic anchors, consolidated priority) | ✅ |
+| **Multiple-run consistency check** (`reg.consistency_check` — identical core hash across runs) | ✅ |
 | Coverage report across a categorized scenario set | ✅ |
 | Retrieval eval (hit / recall@k / MRR) | ✅ |
 | Web UI | 🔜 |

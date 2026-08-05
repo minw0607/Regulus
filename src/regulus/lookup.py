@@ -109,7 +109,12 @@ class RegulusLookup:
             if existing is None or hit.score > existing.score:
                 best[hit.doc_id] = LookupResult(provision=provision, score=float(hit.score), snippet=hit.text[:300])
 
-        ranked = sorted(best.values(), key=lambda r: r.score, reverse=True)
+        # Deterministic ranking: embedding inference (especially local, CPU) can
+        # produce ~1e-7 floating-point noise between runs, which would flip the
+        # order of near-tied provisions. Rank on the score rounded to 6 dp with
+        # the provision uid as a stable tie-break, so the same query + store
+        # yields the same list on every run.
+        ranked = sorted(best.values(), key=lambda r: (-round(r.score, 6), r.provision.unique_id()))
         selected = ranked[:top_k]
 
         if getattr(self.config, "layer_aware", True) and len(selected) == top_k and top_k >= 2:
@@ -118,10 +123,10 @@ class RegulusLookup:
             missing = corpus_layers - selected_layers
             if missing:
                 layer = missing.pop()
-                threshold = 0.5 * selected[0].score
+                threshold = round(0.5 * round(selected[0].score, 6), 6)
                 candidate = next(
                     (r for r in ranked[top_k:]
-                     if framework_layer(r.provision.framework_id) == layer and r.score >= threshold),
+                     if framework_layer(r.provision.framework_id) == layer and round(r.score, 6) >= threshold),
                     None,
                 )
                 if candidate is not None:

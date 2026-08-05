@@ -329,6 +329,92 @@ def draw_issue_graph(graph_lookup, issue: str, top_k: int = 2, figsize=(11, 7), 
     return fig
 
 
+def draw_top_risks(assessment, n: int = 7, figsize=(8, 4)):
+    """Horizontal bars: each risk's score = summed relevance of the provisions
+    addressing it. Longer bar ⇒ more, stronger provisions point at that risk."""
+    plt = _import_matplotlib()
+    if plt is None:
+        return None
+    df = assessment.top_risks(n)
+    if df.empty:
+        print("[note] no risks identified for this scenario.")
+        return None
+    df = df.iloc[::-1]  # top risk on top
+    fig, ax = plt.subplots(figsize=figsize)
+    bars = ax.barh(df["risk"], df["score"], color="#d1495b", alpha=0.85)
+    for bar, (_, row) in zip(bars, df.iterrows()):
+        ax.text(bar.get_width() + 0.01, bar.get_y() + bar.get_height() / 2,
+                f"{row['score']:.2f}", va="center", fontsize=8)
+    ax.set_xlabel("risk score  (summed relevance of addressing provisions)")
+    ax.set_title("Top risks for this scenario  (deterministic, explainable)")
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    return fig
+
+
+def draw_priority_bubbles(assessment, figsize=(8.5, 5.5)):
+    """Bubble view of the priority ranking: x = retrieval relevance, y = graph
+    leverage, bubble size = priority score, color = framework. The linchpin is
+    the big bubble toward the top — visibly separating 'most similar' (right)
+    from 'most connected' (up)."""
+    plt = _import_matplotlib()
+    if plt is None:
+        return None
+    items = assessment.priority
+    if not items:
+        print("[note] no priority items for this scenario.")
+        return None
+    name_colors = {
+        "EU AI Act": _COLORS["eu_ai_act"], "NIST AI RMF 1.0": _COLORS["nist_ai_rmf"],
+        "NIST AI 600-1 (GenAI Profile)": _COLORS["nist_ai_600_1"], "OECD AI Principles": _COLORS["oecd_ai"],
+        "ISO/IEC 42001:2023": _COLORS["iso_42001"], "MITRE ATLAS": _COLORS["mitre_atlas"],
+        "OWASP Top 10 for LLM (2025)": _COLORS["owasp_llm_top10"],
+    }
+    fig, ax = plt.subplots(figsize=figsize)
+    for i, it in enumerate(items):
+        color = name_colors.get(it.framework, "#666")
+        ax.scatter(it.relevance, it.leverage, s=300 + 2200 * it.priority / max(x.priority for x in items),
+                   color=color, alpha=0.55, edgecolors="#222", linewidths=1.2 if i == 0 else 0.4, zorder=3)
+        short = it.citation.split(" — ")[0].replace(", ", "\n", 1)
+        ax.annotate(("★ " if i == 0 else "") + short, (it.relevance, it.leverage),
+                    fontsize=7, ha="center", va="center", zorder=4)
+    ax.set_xlabel("retrieval relevance  (similarity says: most like the scenario)")
+    ax.set_ylabel("graph leverage  (network says: most connected)")
+    ax.set_title("Priority = relevance × connectedness   (★ = linchpin, address first)")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    return fig
+
+
+def draw_review_heatmap(batch, figsize=(10, 4.2)):
+    """Findings × risks heatmap for a multi-finding review: cell = number of
+    retrieved provisions addressing that risk in that finding. Hot columns are
+    the review's systemic risks; hot rows are the broadest findings."""
+    plt = _import_matplotlib()
+    if plt is None:
+        return None
+    m = batch.risk_matrix()
+    if m.empty:
+        print("[note] empty risk matrix.")
+        return None
+    fig, ax = plt.subplots(figsize=figsize)
+    im = ax.imshow(m.values, cmap="YlOrRd", aspect="auto")
+    ax.set_xticks(range(len(m.columns)))
+    ax.set_xticklabels([c.replace(" — ", "\n") for c in m.columns], fontsize=7, rotation=30, ha="right")
+    ax.set_yticks(range(len(m.index)))
+    ax.set_yticklabels(m.index, fontsize=8)
+    for i in range(m.shape[0]):
+        for j in range(m.shape[1]):
+            v = m.values[i, j]
+            if v:
+                ax.text(j, i, int(v), ha="center", va="center", fontsize=8,
+                        color="white" if v >= m.values.max() * 0.7 else "#333")
+    fig.colorbar(im, ax=ax, shrink=0.8, label="# provisions addressing the risk")
+    ax.set_title("Review heatmap — findings × risks  (hot columns = systemic risks)")
+    fig.tight_layout()
+    return fig
+
+
 def _import_matplotlib():
     try:
         import matplotlib.pyplot as plt

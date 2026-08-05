@@ -72,6 +72,31 @@ class Assessment:
     interpretation: Optional[Interpretation] = None
 
     # ---- tabular views (deterministic) ------------------------------------
+    def top_risks(self, n: int = 3) -> pd.DataFrame:
+        """The top-N risks for this scenario, ranked with an explainable score.
+
+        A risk's score is the summed retrieval relevance of the primary provisions
+        that address it — so a risk ranks high when *several strong* hits point at
+        it, not merely because many weak ones mention a keyword. The `why` column
+        names the driving provisions and the control objective. Deterministic:
+        same scenario + store ⇒ same ranking, every run.
+        """
+        rel_by_citation = {p.citation: p.score for p in self.primary}
+        rows = []
+        for risk, provs in self.risks:
+            drivers = sorted(provs, key=lambda c: -rel_by_citation.get(c, 0.0))
+            score = sum(rel_by_citation.get(c, 0.0) for c in provs)
+            ctrl = control_for(_RISK_NAME_TO_ID.get(risk, ""))
+            driver_str = "; ".join(f"{c.split(' — ')[0]} ({rel_by_citation.get(c, 0):.2f})" for c in drivers[:3])
+            why = (f"{len(provs)} of the {len(self.primary)} retrieved provisions address it — "
+                   f"strongest: {drivers[0].split(' — ')[0]}. Control objective: {ctrl.objective}")
+            rows.append({"rank": 0, "risk": risk, "score": round(score, 3),
+                         "driving provisions (relevance)": driver_str, "why": why})
+        rows.sort(key=lambda r: (-r["score"], r["risk"]))
+        for i, r in enumerate(rows[:n], 1):
+            r["rank"] = i
+        return pd.DataFrame(rows[:n])
+
     def risk_table(self) -> pd.DataFrame:
         """Risk × relevant standards × suggested control — the at-a-glance summary."""
         rows = []
@@ -176,8 +201,13 @@ class Assessment:
         lines.append(f"**System under review:** {self.target_system}")
         lines.append(f"**Scenario:** {self.scenario}\n")
 
-        # 1) Risk × standards × control table
+        # 1) Risk × standards × control table (led by the ranked top risks)
         lines.append("### 1. Risks, standards & controls")
+        top = self.top_risks(3)
+        if not top.empty:
+            lines.append("**Top risks (ranked by summed relevance of the provisions addressing them):**\n")
+            lines.append(_df_to_md(top[["rank", "risk", "score", "driving provisions (relevance)"]]))
+            lines.append("\n**All risks identified:**\n")
         lines.append(_df_to_md(self.risk_table()))
 
         # 2) Priority — the GKN insight
