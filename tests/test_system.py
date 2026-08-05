@@ -47,9 +47,10 @@ def test_overview_renders_key_facts():
     provs = _corpus()
     gl = RegulusGraphLookup(provs, cfg)
     reg = RegulusSystem(cfg, provs, gl, RegulusInterpreter(gl, cfg), standards=["nist_ai_rmf", "eu_ai_act"])
-    md = reg.overview()
+    md = reg.overview_markdown()
     for token in ("Regulatory data store", "Knowledge network", "Reproducibility", "Input", "Output"):
         assert token in md
+    assert reg.overview() is None  # renders; must not return the raw string (notebook Out[] echo)
 
 
 def test_assess_is_deterministic_core_and_reproducible():

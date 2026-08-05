@@ -97,10 +97,15 @@ class RegulusSystem:
         ]
         return pd.DataFrame(rows, columns=["property", "value"])
 
-    def overview(self):
+    def overview(self) -> None:
         """A one-glance 'app card' for the launched system: what it is, the models it
         uses, the data it covers, the knowledge-network shape, and its I/O contract.
-        Renders as Markdown in a notebook; returns the Markdown string."""
+        Renders as Markdown and returns None (so a notebook doesn't also echo the
+        raw string as the cell's Out[] value)."""
+        _render_markdown(self.overview_markdown())
+
+    def overview_markdown(self) -> str:
+        """The overview app card as a Markdown string (no rendering)."""
         import os
         from collections import Counter
 
@@ -158,7 +163,7 @@ retrieval pass over a fixed data store, so the same scenario yields the **same
 core** every run. Only the LLM's wording (section 3) may vary; it is labeled and
 runs at temperature 0.
 """
-        return _render_markdown(md)
+        return md
 
     # ---- core operations --------------------------------------------------
     def assess(self, scenario: str, top_k: Optional[int] = None, with_llm: bool = True,

@@ -150,6 +150,11 @@ class Assessment:
     def linchpin(self) -> Optional[PriorityItem]:
         return self.priority[0] if self.priority else None
 
+    def __repr__(self) -> str:  # compact — avoids a wall of text when echoed in a notebook
+        lp = self.linchpin.citation if self.linchpin else "—"
+        return (f"<Assessment: {len(self.primary)} provisions, {len(self.risks)} risks, "
+                f"{len(self.graph_reach)} graph reaches; linchpin: {lp[:60]}>")
+
     # ---- rendering --------------------------------------------------------
     def to_markdown(self) -> str:
         lines: List[str] = []

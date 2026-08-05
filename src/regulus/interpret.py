@@ -98,6 +98,10 @@ class Interpretation:
             return self.answer_markdown
         return f"*(dry run — no LLM called: {self.note})*\n\n**Structured context that would be sent:**\n\n{self.context}"
 
+    def __repr__(self) -> str:  # compact — avoids a wall of text when echoed in a notebook
+        state = f"answered by {self.model}" if self.answer_markdown else f"dry run ({self.note})"
+        return f"<Interpretation: {len(self.citations)} citations; {state}>"
+
 
 class RegulusInterpreter:
     def __init__(
