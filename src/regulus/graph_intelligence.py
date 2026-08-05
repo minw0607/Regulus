@@ -52,6 +52,7 @@ class GraphReach:
     source: str              # provenance of the final crosswalk mapping
     rationale: str = ""      # the edge's own explanation of WHY the two are linked
     signals: List[str] = field(default_factory=list)  # per-hop "relation: rationale" chain
+    uid: str = ""            # graph node id (framework::provision slug)
 
 
 @dataclass
@@ -124,6 +125,7 @@ def graph_expand(
                             source=nb_src,
                             rationale=nb_rat,
                             signals=nb_signals,
+                            uid=nb,
                         )
                 queue.append((nb, hops + 1, nb_path, nb_signals))
 

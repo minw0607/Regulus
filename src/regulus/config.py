@@ -42,6 +42,11 @@ class RegulusConfig:
     filter_non_substantive: bool = field(
         default_factory=lambda: os.getenv("REGULUS_FILTER_NON_SUBSTANTIVE", "1") not in ("0", "false", "False")
     )
+    # Keep both corpus layers (regulatory vs threat) represented in top-k when
+    # both are relevant — see RegulusLookup.search. REGULUS_LAYER_AWARE=0 disables.
+    layer_aware: bool = field(
+        default_factory=lambda: os.getenv("REGULUS_LAYER_AWARE", "1") not in ("0", "false", "False")
+    )
     chunk_size: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_SIZE", "900")))
     chunk_overlap: int = field(default_factory=lambda: int(os.getenv("REGULUS_CHUNK_OVERLAP", "150")))
 

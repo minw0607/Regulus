@@ -14,6 +14,25 @@ from .config import RegulusConfig
 from .indexing import build_units
 from .ingest.base import Provision
 
+# The corpus has two layers: what the LAW/GUIDANCE requires, and what the THREAT
+# knowledge says about attacks and controls. Similarity alone tends to cluster
+# hits inside one layer (a security scenario pulls only OWASP/ATLAS; a bias
+# scenario only regulation). Layer-aware retrieval keeps both anchors in view.
+LAYER_BY_FRAMEWORK = {
+    "eu_ai_act": "regulatory",
+    "nist_ai_rmf": "regulatory",
+    "nist_ai_600_1": "regulatory",
+    "oecd_ai": "regulatory",
+    "iso_42001": "regulatory",
+    "fed_sr_26_2": "regulatory",
+    "mitre_atlas": "threat",
+    "owasp_llm_top10": "threat",
+}
+
+
+def framework_layer(framework_id: str) -> str:
+    return LAYER_BY_FRAMEWORK.get(framework_id, "regulatory")
+
 
 @dataclass
 class LookupResult:
@@ -69,10 +88,17 @@ class RegulusLookup:
         return SimpleVectorStore()
 
     def search(self, issue: str, top_k: int | None = None) -> List[LookupResult]:
-        """Return the top applicable provisions for a free-text issue/observation."""
+        """Return the top applicable provisions for a free-text issue/observation.
+
+        Layer-aware (when enabled and the corpus spans both layers): if the plain
+        top-k all come from one layer (regulatory vs threat) and the other layer
+        has a candidate scoring at least half the top score, the last slot is
+        given to that candidate — so an assessment always sees both what the law
+        requires and what the threat knowledge says, when both are relevant.
+        Deterministic: same query + store ⇒ same result."""
         top_k = top_k or self.config.top_k
         # Retrieve extra chunks so we can dedup to `top_k` distinct provisions.
-        hits = self.vector_store.search(issue, top_k=max(top_k * 4, top_k))
+        hits = self.vector_store.search(issue, top_k=max(top_k * 6, top_k))
 
         best: dict[str, LookupResult] = {}
         for hit in hits:
@@ -84,4 +110,20 @@ class RegulusLookup:
                 best[hit.doc_id] = LookupResult(provision=provision, score=float(hit.score), snippet=hit.text[:300])
 
         ranked = sorted(best.values(), key=lambda r: r.score, reverse=True)
-        return ranked[:top_k]
+        selected = ranked[:top_k]
+
+        if getattr(self.config, "layer_aware", True) and len(selected) == top_k and top_k >= 2:
+            corpus_layers = {framework_layer(p.framework_id) for p in self._by_id.values()}
+            selected_layers = {framework_layer(r.provision.framework_id) for r in selected}
+            missing = corpus_layers - selected_layers
+            if missing:
+                layer = missing.pop()
+                threshold = 0.5 * selected[0].score
+                candidate = next(
+                    (r for r in ranked[top_k:]
+                     if framework_layer(r.provision.framework_id) == layer and r.score >= threshold),
+                    None,
+                )
+                if candidate is not None:
+                    selected = selected[:-1] + [candidate]
+        return selected

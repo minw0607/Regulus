@@ -323,3 +323,25 @@ runs at temperature 0.
         from .eval import retrieval_report
 
         return retrieval_report(self.graph_lookup, eval_set=eval_set, top_k=top_k)
+
+    def evaluate_cross_framework(self, eval_set=None, top_k: int = 5, max_hops: int = 2) -> pd.DataFrame:
+        """The fair flat-vs-graph test: coverage of expected provision sets that span
+        ≥2 frameworks. Flat RAG retrieves over the whole corpus; graph = the same
+        retrieval + cited crosswalk expansion. Deterministic."""
+        from .graph_eval import cross_framework_report
+
+        return cross_framework_report(self.graph_lookup, eval_set=eval_set, top_k=top_k, max_hops=max_hops)
+
+    def ab_report(self, scenarios=None, top_k: Optional[int] = None) -> pd.DataFrame:
+        """Blind LLM-judged A/B: flat context vs graph context on the same scenarios.
+        Needs the LLM (generation + judging); returns an empty frame without a key."""
+        from . import demo
+        from .ab_eval import ab_report
+
+        if scenarios is None:
+            scenarios = [
+                demo.SCENARIOS["Security — adversarial & prompt injection"],
+                demo.SCENARIOS["Bias — credit underwriting"],
+                demo.SCENARIOS["Agentic — autonomous tool use"],
+            ]
+        return ab_report(self, scenarios, top_k=top_k or self.config.top_k)

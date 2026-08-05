@@ -50,6 +50,15 @@ Similarity clusters *within a framework*; the graph follows cited crosswalks —
 
 That is a *regulation → threat → control* chain no similarity search produces — every hop cited, every link explained.
 
+**And the fair test** (`reg.evaluate_cross_framework()`): 10 labelled cases whose expected provisions span ≥2 frameworks; flat RAG retrieves over the *whole* corpus with the same retriever and k; the graph adds cited crosswalk expansion. Result (TF-IDF baseline, deterministic):
+
+| | flat RAG | + knowledge graph |
+|---|:--:|:--:|
+| cross-framework recall@5 | 0.55 | **1.00** |
+| expected frameworks found (avg of ~2.8) | 1.5 | **2.8** |
+
+A blind, LLM-judged answer-quality A/B (`reg.ab_report()`) complements this: same model, temperature 0, same provisions — the only difference is whether the context carries the graph's typed relationships.
+
 **Structured, reproducible assessment** (`reg.assess(scenario)`) — risk × standards × control, e.g.:
 
 | risk | relevant provisions (standards) | suggested control / mitigant |
@@ -187,9 +196,12 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 | Grounded, cited **LLM interpretation** (dry-run without a key) | ✅ |
 | **Reproducible structured assessment** (risk × standards × control) + export (MD/JSON/CSV) | ✅ |
 | **Graph intelligence** — multi-hop reach · leverage/linchpin · flat-RAG-vs-GraphRAG | ✅ |
+| **Layer-aware retrieval** (regulatory + threat anchors both kept in top-k) | ✅ |
+| **Cross-framework eval** (flat vs graph recall on ≥2-framework cases) | ✅ |
+| **Blind answer-quality A/B** (LLM judge, temperature 0, randomized labels) | ✅ |
+| **Evidence paths** (node —[signal]→ node chains in every assessment) | ✅ |
 | Coverage report across a categorized scenario set | ✅ |
 | Retrieval eval (hit / recall@k / MRR) | ✅ |
-| Cross-framework evidence paths (GKN path explainer) | 🔜 |
 | Web UI | 🔜 |
 
 **Measured retrieval quality** (provision-aware indexing; 12 regulatory cases with embeddings: **hit 1.00 · recall@5 0.92 · MRR 0.94**; the eval set now spans 16 cases including security/threat phrasing — tracked in the notebook). Examples:
@@ -238,7 +250,7 @@ flowchart LR
     P1["Phase 1<br/>baseline lookup"] --> P2["Phase 2<br/>regulatory graph<br/>+ cited crosswalks"]
     P2 --> P3["Phase 3<br/>graph intelligence<br/>+ reproducible assessment"]
     P3 --> P4["Phase 4<br/>LLM interpretation<br/>structured answer"]
-    P4 --> P5["Phase 5<br/>evidence paths + UI"]
+    P4 --> P5["Phase 5<br/>agentic taxonomies + UI"]
     classDef done fill:#e1f5ee,stroke:#0f6e56,color:#04342c;
     classDef todo fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a;
     class P1,P2,P3,P4 done
@@ -249,7 +261,7 @@ flowchart LR
 - **Phase 2 — regulatory graph** *(done)*: frameworks / provisions / risks + curated, **cited** crosswalks.
 - **Phase 3 — graph intelligence + assessment** *(done)*: multi-hop crosswalk reach, leverage/linchpin prioritization, flat-RAG-vs-GraphRAG comparison, and a reproducible risk × standards × control assessment with export.
 - **Phase 4 — interpretation** *(done)*: grounded, cited LLM synthesis over the retrieved provisions + relationships.
-- **Phase 5 — evidence paths + UI** *(next)*: issue → provision → crosswalk → provision paths via GKN's path explainer; a "submit an issue" web UI; a larger issue → expected-standards benchmark; and replacing seed crosswalks with authoritative mappings.
+- **Phase 5 — agentic taxonomies + UI** *(next)*: OWASP Agentic AI threats (T1–T17) and Top 10 for Agentic Applications; replacing seed crosswalks with authoritative mappings (NIST AIRC crosswalks); a "submit an issue" web UI; a larger issue → expected-standards benchmark. (Evidence paths shipped early — every assessment now renders node —[signal]→ node chains.)
 
 ---
 

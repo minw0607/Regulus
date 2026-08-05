@@ -155,6 +155,20 @@ class Assessment:
         return (f"<Assessment: {len(self.primary)} provisions, {len(self.risks)} risks, "
                 f"{len(self.graph_reach)} graph reaches; linchpin: {lp[:60]}>")
 
+    def evidence_paths(self, limit: int = 3) -> List[str]:
+        """The most instructive reach chains, rendered node —[signal]→ node.
+
+        Multi-hop chains first (they show relationships similarity can't see),
+        then cross-framework 1-hop links. Every hop shows its own signal."""
+        ranked = sorted(self.graph_reach, key=lambda r: (-r.hops, r.framework, r.citation))
+        out = []
+        for r in ranked[:limit]:
+            parts = [r.path[0]]
+            for node, sig in zip(r.path[1:], r.signals):
+                parts.append(f" —[{sig[:110]}]→ {node}")
+            out.append("".join(parts))
+        return out
+
     # ---- rendering --------------------------------------------------------
     def to_markdown(self) -> str:
         lines: List[str] = []
@@ -188,6 +202,11 @@ class Assessment:
                 "concern in other frameworks*, which similarity retrieval alone did not return:\n"
             )
             lines.append(_df_to_md(self.reach_table()))
+            paths = self.evidence_paths(limit=3)
+            if paths:
+                lines.append("\n**Evidence paths** (each hop shows the signal that justifies it):")
+                for p in paths:
+                    lines.append(f"> {p}")
         else:
             lines.append("*(no additional provisions reachable via crosswalks from the retrieved set)*")
 
