@@ -382,6 +382,7 @@ def draw_priority_bubbles(assessment, figsize=(8.5, 5.5)):
     ax.set_ylabel("graph leverage  (network says: most connected)")
     ax.set_title("Priority = relevance × connectedness   (★ = linchpin, address first)")
     ax.grid(alpha=0.25)
+    ax.margins(x=0.22, y=0.22)  # keep the largest bubbles + their labels inside the axes
     fig.tight_layout()
     return fig
 

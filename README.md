@@ -28,21 +28,41 @@
 <img src="docs/assets/framework_map.png" width="70%" alt="Cross-framework crosswalk map: node size = number of provisions, edge label = number of cited crosswalks."/>
 </div>
 
+**"What are the top 3 risks here, and why?"** (`reg.top_risks(scenario, n=3)`) — ranked *deterministically*: a risk's score is the summed retrieval relevance of the provisions that address it, so several strong provisions outrank many weak keyword matches. No LLM involved, so the ranking is auditable:
+
+| rank | risk | score | driving provisions |
+|:--:|---|:--:|---|
+| 1 | Secure and resilient | 2.98 | OWASP LLM04 (0.63) · OWASP LLM01 (0.61) · EU AI Act Art 15 |
+| 2 | Valid and reliable | 2.42 | OWASP LLM04 (0.63) · OWASP LLM01 (0.61) |
+| 3 | Accountable and transparent | 1.17 | OWASP LLM03 (0.60) · … |
+
+**What to fix first** (`reg.priority(scenario)`) — the bubble chart makes the tension visible: similarity says *"rightmost bubble"*; the knowledge network says *"highest, biggest bubble"*. The ★ linchpin is the provision whose remediation advances the most other findings:
+
+<div align="center">
+<img src="docs/assets/priority_bubbles.png" width="76%" alt="Priority bubble chart: x-axis retrieval relevance, y-axis graph leverage, bubble size priority score, star marks the linchpin provision."/>
+</div>
+
 **One scenario's regulatory neighborhood** — the same bias concern expressed across four frameworks. Bold-outlined squares are the direct retrieval hits; plain squares are provisions the graph reaches via cited crosswalks; grey circles are the risks they address:
 
 <div align="center">
 <img src="docs/assets/neighborhood_bias.png" width="82%" alt="Regulatory neighborhood of a demographic-bias scenario, linking EU AI Act Article 10 and NIST GenAI MEASURE 2.11 across NIST RMF and ISO 42001 via crosswalks."/>
 </div>
 
+**A whole review, not one lookup** (`reg.assess_batch(findings)`) — real validations raise several findings. Regulus assesses each and consolidates: **hot columns are the review's systemic risks**, hot rows the broadest findings. It also surfaces *systemic anchors* (provisions implicated by ≥2 findings — fix once, close several) and a consolidated address-first ranking:
+
+<div align="center">
+<img src="docs/assets/review_heatmap.png" width="88%" alt="Review heatmap: five findings by risk category, cell values showing how many retrieved provisions address each risk."/>
+</div>
+
 **Why the graph beats flat RAG — measured, not asserted** (`reg.compare_rag(scenario)`, prompt-injection scenario):
 
 | dimension | flat RAG (similarity only) | Regulus GraphRAG |
 |---|:--:|:--:|
-| provisions surfaced | 5 | **44** |
-| frameworks covered | 3 | **6** |
-| cross-framework links used | 0 | **16** |
-| risks identified | 0 | **4** |
-| prioritized "address-first" | — | **leverage-ranked linchpin** |
+| provisions surfaced | 5 | **37** |
+| frameworks covered | 1 | **6** |
+| cross-framework links used | 0 | **6** |
+| risks identified | 0 | **5** |
+| prioritized "address-first" | — | **OWASP LLM01 (leverage-ranked linchpin)** |
 
 Similarity clusters *within a framework*; the graph follows cited crosswalks — including **multi-hop chains with a signal at every step**:
 
@@ -50,14 +70,26 @@ Similarity clusters *within a framework*; the graph follows cited crosswalks —
 
 That is a *regulation → threat → control* chain no similarity search produces — every hop cited, every link explained.
 
-**And the fair test** (`reg.evaluate_cross_framework()`): 10 labelled cases whose expected provisions span ≥2 frameworks; flat RAG retrieves over the *whole* corpus with the same retriever and k; the graph adds cited crosswalk expansion. Result (TF-IDF baseline, deterministic):
+**And the fair test.** The knowledge network is *not* claimed to help every lookup — only questions whose answer needs a chain or network of references. That claim is measured two ways:
+
+**1. Cross-framework recall** (`reg.evaluate_cross_framework()`, deterministic) — 10 labelled cases whose expected provisions span ≥2 frameworks. Flat RAG retrieves over the *whole* corpus with the same retriever and k (a genuine chance to find the equivalents by similarity); the graph adds cited crosswalk expansion:
 
 | | flat RAG | + knowledge graph |
 |---|:--:|:--:|
 | cross-framework recall@5 | 0.55 | **1.00** |
 | expected frameworks found (avg of ~2.8) | 1.5 | **2.8** |
 
-A blind, LLM-judged answer-quality A/B (`reg.ab_report()`) complements this: same model, temperature 0, same provisions — the only difference is whether the context carries the graph's typed relationships.
+**2. Blind answer-quality A/B** (`reg.ab_report()`, LLM-judged) — same scenario, same model at temperature 0, same retrieved provisions; the *only* difference is whether the context carries the graph's typed relationships. The judge scores blind (answer order randomized per scenario):
+
+| | flat context | graph context |
+|---|:--:|:--:|
+| total score (of 20) | 13.0 | **16.7** |
+| cross-framework criterion (of 5) | 2.7 | **4.3** |
+| blind judge verdict | — | **graph 3 / flat 0** |
+
+<sub>Evidence, not proof: n=3 with a single judge model. The deterministic recall figure above is the harder number. Honest counter-example: one eval case (robustness testing) already scores 1.00 for flat RAG — no graph gain — which is the thesis working as stated.</sub>
+
+**Reproducibility, checked rather than claimed** (`reg.consistency_check(scenario, runs=3)`) — re-runs the pipeline and compares a hash of the entire deterministic core. It has caught two real defects: CPU float noise (~1e-7) reordering near-tied provisions, and cloud embedding endpoints not returning bit-identical vectors per call. Both fixed (rounded ranking with a stable tie-break; one embedding per distinct query per session).
 
 **Structured, reproducible assessment** (`reg.assess(scenario)`) — risk × standards × control, e.g.:
 
@@ -66,7 +98,7 @@ A blind, LLM-judged answer-quality A/B (`reg.ab_report()`) complements this: sam
 | Fair — bias managed | EU AI Act Art 10 · NIST RMF MEASURE 2.11 | Test outcomes for disparate impact; govern training data for bias |
 | Accountable & transparent | EU AI Act Art 12 · NIST 600-1 GV-4.2 | Logging/record-keeping and clear ownership across the lifecycle |
 
-Every run of the same scenario produces the **same core** (risks, provisions, controls, priority); only the LLM's prose narrative can vary. Export to Markdown + JSON + CSV with `reg.assess(scenario, export=True)`.
+Within a session, every run of the same scenario produces the **same core** (risks, provisions, controls, priority) — verified by hash, not assumed; only the LLM's prose narrative can vary. Export to Markdown + JSON + CSV with `reg.assess(scenario, export=True)`.
 
 ---
 
@@ -207,12 +239,14 @@ This graph is **built today** from the ingested corpus plus a curated, cited cro
 | Retrieval eval (hit / recall@k / MRR) | ✅ |
 | Web UI | 🔜 |
 
-**Measured retrieval quality** (provision-aware indexing; 12 regulatory cases with embeddings: **hit 1.00 · recall@5 0.92 · MRR 0.94**; the eval set now spans 16 cases including security/threat phrasing — tracked in the notebook). Examples:
+**Measured retrieval quality** — 16 labelled cases (12 regulatory + 4 security/threat), provision-aware indexing with embeddings: **hit 0.94 · recall@5 0.84 · MRR 0.91**. Examples:
 
 | Issue | Top provision returned |
 |---|---|
 | *"real-time facial recognition in public spaces for law enforcement"* | **EU AI Act, Article 5** — prohibited AI practices |
 | *"model deployed without testing for demographic bias"* | **NIST GenAI MEASURE 2.11 / EU AI Act Article 10** |
+| *"attackers inject instructions via retrieved web content"* | **MITRE ATLAS AML.T0051** — LLM prompt injection |
+| *"agent invokes tools with no human approval"* | **MITRE ATLAS AML.M0029** — human in-the-loop for agent actions |
 
 ---
 
@@ -237,9 +271,19 @@ regulus lookup "our model was not validated for demographic bias" --top-k 5 --cr
 from regulus.system import RegulusSystem
 
 reg = RegulusSystem.launch(target_system="A credit-scoring model for consumer loans.")
-reg.overview()                       # app card: models, data store, KN structure, I/O
-reg.assess("model deployed without testing for demographic bias", export=True)
-reg.compare_rag("...")               # flat RAG vs GraphRAG, measured
+reg.overview()                        # app card: models, data store, KN structure, I/O
+
+scenario = "model deployed without testing for demographic bias"
+reg.assess(scenario, export=True)     # full assessment → artifacts/assessments/
+reg.top_risks(scenario, n=3)          # top 3 risks, ranked, with why
+reg.priority(scenario)                # what to address first (leverage/linchpin)
+
+reg.assess_batch(findings)            # multi-finding review: heatmap + systemic anchors
+reg.consistency_check(scenario)       # same scenario N times → identical core?
+
+reg.compare_rag(scenario)             # flat RAG vs GraphRAG, measured
+reg.evaluate_cross_framework()        # the fair test (deterministic)
+reg.ab_report()                       # blind LLM-judged answer-quality A/B
 ```
 
 The default `auto` retriever uses embeddings when an `OPENAI_API_KEY` is available (reused from a sibling GKN `.env`) and TF-IDF otherwise — no API key required to run. For the LLM interpretation layer, `pip install openai`; without it, `assess()` still returns the full deterministic core. The end-to-end walkthrough is in [`notebooks/regulus_ai_governance_lookup.ipynb`](notebooks/regulus_ai_governance_lookup.ipynb) — it self-bootstraps GKN from the local checkout, so it runs without a `pip install`.

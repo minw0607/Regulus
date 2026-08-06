@@ -67,6 +67,12 @@ class RegulusLookup:
         self.retriever = self._resolve_retriever()
         self.vector_store = self._build_vector_store()
         self.vector_store.build(self.chunks)
+        # Cache of raw store hits per (query, pool size). Cloud embedding endpoints
+        # do not return bit-identical vectors for the same input on every call, so
+        # re-embedding a query mid-review could reorder near-tied provisions. One
+        # embedding per distinct query keeps a session's evidence identical — and
+        # cuts API calls when the same scenario is assessed repeatedly.
+        self._hits_cache: dict[tuple[str, int], list] = {}
 
     def _resolve_retriever(self) -> str:
         """Resolve 'auto' -> 'embedding' if a cloud key is available, else 'tfidf'."""
@@ -98,7 +104,12 @@ class RegulusLookup:
         Deterministic: same query + store ⇒ same result."""
         top_k = top_k or self.config.top_k
         # Retrieve extra chunks so we can dedup to `top_k` distinct provisions.
-        hits = self.vector_store.search(issue, top_k=max(top_k * 6, top_k))
+        pool = max(top_k * 6, top_k)
+        cache_key = (issue, pool)
+        hits = self._hits_cache.get(cache_key)
+        if hits is None:
+            hits = self.vector_store.search(issue, top_k=pool)
+            self._hits_cache[cache_key] = hits
 
         best: dict[str, LookupResult] = {}
         for hit in hits:

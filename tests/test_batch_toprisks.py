@@ -64,3 +64,34 @@ def test_consistency_check_identical_cores():
     assert len(df) == 3
     assert df["identical to run 1"].all()
     assert df["deterministic core hash"].nunique() == 1
+
+
+def test_query_hits_cached_against_flaky_embedding_store():
+    """Cloud embedding endpoints don't return bit-identical vectors per call, which
+    could reorder near-tied provisions mid-review. One embedding per distinct query
+    keeps a session's retrieval — and therefore its filed evidence — identical."""
+    from regulus.lookup import RegulusLookup
+
+    cfg = RegulusConfig()
+    cfg.retriever = "tfidf"
+    lookup = RegulusLookup(_corpus(), cfg)
+
+    calls = {"n": 0}
+    real_search = lookup.vector_store.search
+
+    def flaky_search(query, top_k):
+        # Perturb scores a little on every call, as a cloud endpoint effectively does.
+        calls["n"] += 1
+        hits = real_search(query, top_k=top_k)
+        for i, h in enumerate(hits):
+            h.score = float(h.score) + (calls["n"] * 1e-4 if i % 2 else -calls["n"] * 1e-4)
+        return hits
+
+    lookup.vector_store.search = flaky_search
+    lookup._hits_cache.clear()
+
+    first = [r.provision.unique_id() for r in lookup.search("bias fairness data governance", top_k=3)]
+    for _ in range(4):
+        again = [r.provision.unique_id() for r in lookup.search("bias fairness data governance", top_k=3)]
+        assert again == first
+    assert calls["n"] == 1, "the query must be embedded/searched only once per session"
