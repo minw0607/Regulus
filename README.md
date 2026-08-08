@@ -6,13 +6,16 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Status](https://img.shields.io/badge/Status-Working%20MVP-1baf7a.svg)]()
+[![Development: Working MVP](https://img.shields.io/badge/Development-Working%20MVP-1baf7a.svg)]()
 [![Frameworks](https://img.shields.io/badge/frameworks-EU%20AI%20Act%20·%20NIST%20·%20OECD%20·%20ISO%2042001%20·%20MITRE%20ATLAS%20·%20OWASP%20LLM-378add.svg)]()
 [![Built on: GKN](https://img.shields.io/badge/built%20on-Geometric%20Knowledge%20Network-2C3E50.svg)](https://github.com/minw0607/geometric_knowledge_network)
+[![Project: Independent & Personal](https://img.shields.io/badge/Project-Independent%20%26%20Personal-lightgrey)](#disclaimer)
 
 *Describe an AI system and a scenario → get the **risks**, the **applicable provisions across frameworks** (and why), **what to address first**, and **recommended mitigants** — cited, reproducible, and exportable.*
 
 </div>
+
+> **Status:** Independent personal research project
 
 ---
 
@@ -329,3 +332,17 @@ Regulus fetches text from official sources at runtime and caches it locally (git
 - **Fed SR letters** — registered for the roadmap; needs manual sourcing.
 
 Always verify against the authoritative source before relying on any result. Licensed under the [MIT License](LICENSE).
+
+---
+
+<a id="disclaimer"></a>
+
+## 🧾 Disclaimer
+
+This repository is an independent personal project created outside of my employment using my own time and equipment.
+
+Unless explicitly stated otherwise, the code, notebooks, demonstrations, analyses, and documentation in this repository are developed independently, using only publicly available research papers, technical documentation, regulations, and other public sources. They do not rely on, incorporate, or disclose any confidential, proprietary, non-public, or client information obtained through my employment or professional engagements.
+
+The views, designs, implementations, and conclusions expressed in this repository are solely my own and do not represent the views of any employer, client, or affiliated organization.
+
+This repository is provided for research and educational purposes only.
