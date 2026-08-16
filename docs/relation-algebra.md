@@ -5,6 +5,12 @@ deliberately, because the crosswalk table is the asset the whole system rests on
 and its semantics have never been stated. Implementation (the composition filter
 and the signature audit) follows only after this is agreed.
 
+**See also** [`theory.md`](theory.md), which formalises the surrounding framework
+and surveys the literature. Two corrections from that review are folded in below:
+the constraints are **inclusions, not equations** (§2), and confidence must be a
+**semiring annotation, not per-rule penalties** (§7) — the latter fixes a genuine
+non-confluence in the first draft.
+
 ---
 
 ## 1. The defect this addresses
@@ -45,20 +51,29 @@ The knowledge network is a **typed quiver** `Q`:
 - **paths** — the free category on `Q`: every finite chain of composable arrows.
 
 Multi-hop retrieval walks paths. But the free category admits *every* chain,
-including meaningless ones. What we actually mean is a quotient
+including meaningless ones, so we constrain it.
+
+**Correction to the first draft.** That draft wrote `𝒜 = free category / I` with
+`I` an ideal. That is wrong: an ideal imposes **equations** `r ; s = t`, whereas
+§8 asserts **inclusions**
 
 ```
-        𝒜  =  free category on Q  /  I
+        r ; s  ⊑  t
 ```
 
-where the **ideal `I`** declares which composites are valid, what they equal, and
-which are identified with nothing. **Section 8 is that ideal.** Writing it down is
-the whole exercise: it converts blind traversal into typed reasoning.
+— every pair related by the composite is *also* related by `t`, not conversely.
+So the object is not a quotient algebra but a **set of role inclusion axioms** over
+a relation algebra, which is exactly the form standardised as OWL 2 / SROIQ
+*complex role inclusion axioms*. §8 is that axiom set.
 
-This is the standard presentation of an algebra by generators and relations. We
-borrow only the *language* — there is no learned operator here, and no claim that
-the classification theory of quiver representations applies (our graph is nothing
-like a Dynkin diagram, and we are not embedding it).
+Correspondingly the data is a lax functor into **`Rel`** (sets and binary
+relations), not `Set`: our arrows are many-to-many, so they are relations, not
+functions. See `theory.md` §2 for the precise statement — it is what gives the
+audit in §12 its meaning as a soundness check.
+
+We borrow the presentation *language* only. There is no learned operator here, and
+no claim that the classification theory of quiver representations applies (our
+graph is nothing like a Dynkin diagram, and we are not embedding it).
 
 ---
 
@@ -154,7 +169,7 @@ tell them apart.
 
 ---
 
-## 7. Confidence weights
+## 7. Confidence: a semiring annotation
 
 Every edge carries a provenance string today. Map it to a weight:
 
@@ -164,15 +179,46 @@ Every edge carries a provenance string today. Map it to a weight:
 | textual | rationale quotes the provision's own words (Art 15(5) names "adversarial examples or model evasion") | 0.90 |
 | curated thematic | "curated seed — verify" | 0.60 |
 
-Path confidence = product of edge weights × the rule's penalty (§8). A path below
-a floor (proposed **0.40**) is suppressed. The floor is a placeholder to be
-calibrated later against a labelled set — see the open item on decision bands.
+**Correction to the first draft.** That draft set *path confidence = product of
+edge weights × the rule's penalty*, which is **not well defined**: the result
+depends on the order the rules are applied. For
+`A --equivalent--> B --equivalent--> C --mitigated_by--> D`, reducing left-first
+gives `0.9` and right-first gives `1.0`; for `specializes;specializes;mitigated_by`,
+`0.80` vs `0.64`. (Latent only — `max_hops = 2`, so length-3 paths do not yet
+arise — but the algebra was ill-defined as written.)
+
+**The fix** is to annotate in a commutative semiring `(K, ⊕, ⊗, 0, 1)`, following
+provenance semirings (Green–Karvounarakis–Tannen) and their extension to regular
+path queries:
+
+- weight of a **path** = `⊗` of its edge weights — associative, so grouping is
+  irrelevant and the non-confluence disappears **by construction**;
+- weight of a **node reached by several paths** = `⊕` over those paths.
+
+Default `K` = **min-times** `([0,1], min, ×)`: `⊗ = ×` conjoins along a path,
+`⊕ = min` takes the *worst* derivation — the conservative choice appropriate to
+governance. A path below a floor (proposed **0.40**) is suppressed; the floor is a
+placeholder pending calibration.
+
+Rule-specific penalties, if retained, are applied at the point of rule application
+and aggregated across derivations by `⊕`, rather than one derivation being picked
+arbitrarily. See `theory.md` §E1, including the homomorphism property that lets us
+compute provenance once and specialise the numeric scheme afterwards.
 
 ---
 
-## 8. The composition table (the ideal `I`)
+## 8. The composition table (the role inclusion axioms)
 
-Diagrammatic order: `r ; s` means *follow `r`, then `s`*.
+Diagrammatic order: `r ; s` means *follow `r`, then `s`*. Each row asserts
+`r ; s ⊑ result`.
+
+> **Regularity.** Unrestricted role composition is undecidable; OWL 2 recovers
+> decidability by requiring a strict partial order `≺` on roles under which every
+> axiom has a permitted shape. Every rule below is of the form `S ∘ R ⊑ R` or
+> `R ∘ R ⊑ R`, and the order
+> `equivalent ≺ {related, supports, mitigated_by}`, `{specializes, related} ≺ mitigated_by`
+> is acyclic — so **this table is `≺`-regular and therefore decidable**. Any new
+> rule must preserve that property; see `theory.md` §E2.
 
 | Composite | Result | Penalty | Justification |
 |---|---|--:|---|
